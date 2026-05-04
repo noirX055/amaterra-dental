@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
 :root {
   --background: #ffffff;
@@ -22,5 +23,149 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes hero-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-appear-soft {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-blob-float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(10px, -12px, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero-appear {
+  animation: hero-appear 700ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.hero-appear-soft {
+  animation: hero-appear-soft 650ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.hero-blob {
+  will-change: transform;
+  animation: hero-blob-float 8s ease-in-out infinite;
+}
+
+.hero-blob-2 {
+  animation-direction: reverse;
+  animation-duration: 10s;
+}
+
+.hero-delay-1 {
+  animation-delay: 90ms;
+}
+
+.hero-delay-2 {
+  animation-delay: 170ms;
+}
+
+.hero-delay-3 {
+  animation-delay: 260ms;
+}
+
+.hero-delay-4 {
+  animation-delay: 340ms;
+}
+
+.hero-delay-5 {
+  animation-delay: 420ms;
+}
+
+.animate-modal-fade {
+  animation: modal-fade-in 250ms ease-out forwards;
+}
+
+.animate-modal-slide {
+  animation: modal-slide-in 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-reveal-on-scroll] {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(4px);
+  transition:
+    opacity 650ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 650ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    filter 650ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+[data-reveal-on-scroll].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-appear,
+  .hero-appear-soft,
+  .hero-blob,
+  .hero-delay-1,
+  .hero-delay-2,
+  .hero-delay-3 {
+    animation: none !important;
+  }
+
+  [data-reveal-on-scroll] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
 }

@@ -1,65 +1,123 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AboutUsBlock } from "./blocks/home/AboutUsBlock";
+import { HeroBackground } from "./blocks/home/HeroBackground";
+import { HeroContent } from "./blocks/home/HeroContent";
+import { HeroHeader } from "./blocks/home/HeroHeader";
+import { SpecializationsBlock } from "./blocks/home/SpecializationsBlock";
+import { OurServicesBlock } from "./blocks/home/OurServicesBlock";
+import { ReviewsBlock } from "./blocks/home/ReviewsBlock";
+import { FindUsBlock } from "./blocks/home/FindUsBlock";
+import { LatestInsightsBlock } from "./blocks/home/LatestInsightsBlock";
+import { FooterBlock } from "./blocks/home/FooterBlock";
+import { BookingModal } from "./blocks/home/BookingModal";
+import { I18N, LANG_STORAGE_KEY } from "./blocks/home/i18n";
+import type { Lang } from "./blocks/home/types";
 
 export default function Home() {
+  const [lang, setLang] = useState<Lang>("ru");
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+      if (stored === "ru" || stored === "ro" || stored === "en") setLang(stored);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {
+      // ignore
+    }
+  }, [lang]);
+
+  useEffect(() => {
+    if (!isLangOpen) return;
+
+    function onPointerDown(e: PointerEvent) {
+      const target = e.target;
+      if (!(target instanceof Node)) return;
+      if (langMenuRef.current?.contains(target)) return;
+      setIsLangOpen(false);
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsLangOpen(false);
+    }
+
+    window.addEventListener("pointerdown", onPointerDown, { capture: true });
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("pointerdown", onPointerDown, {
+        capture: true,
+      } as AddEventListenerOptions);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isLangOpen]);
+
+  useEffect(() => {
+    const items = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal-on-scroll]")
+    );
+    if (!items.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    for (const item of items) observer.observe(item);
+    return () => observer.disconnect();
+  }, []);
+
+  const t = useMemo(() => I18N[lang], [lang]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="flex min-h-screen flex-1 flex-col bg-white font-sans text-zinc-900 dark:bg-white dark:text-zinc-900">
+      <main className="flex flex-1 flex-col gap-3 p-0 sm:gap-4">
+        <section
+          id="home"
+          data-reveal-on-scroll
+          className="hero-appear relative flex h-svh w-full flex-col overflow-hidden rounded-b-[28px] bg-zinc-950"
+        >
+          <HeroBackground />
+          <HeroHeader
+            t={t}
+            lang={lang}
+            isLangOpen={isLangOpen}
+            langMenuRef={langMenuRef}
+            setIsLangOpen={setIsLangOpen}
+            setLang={setLang}
+          />
+          <HeroContent t={t} onBookClick={() => setIsBookingModalOpen(true)} />
+        </section>
+        <AboutUsBlock t={t} />
+        <SpecializationsBlock t={t} />
+        <OurServicesBlock t={t} />
+        <ReviewsBlock t={t} />
+        <FindUsBlock t={t} lang={lang} />
+        <LatestInsightsBlock t={t} />
       </main>
+      <BookingModal
+        t={t}
+        lang={lang}
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
+      <FooterBlock t={t} />
     </div>
   );
 }
