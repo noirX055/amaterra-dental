@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Appointment } from "./adminTypes";
 import { formatDate, formatDateTime, statusLabels, statusStyles } from "./adminTypes";
-import { useAdminAppointmentsLive } from "./useAdminAppointmentsLive";
+import { useAppointmentsRealtime } from "./_components/use-appointments-realtime";
 
 type AdminAppointmentsClientProps = {
   initialAppointments: Appointment[];
@@ -14,7 +14,7 @@ export default function AdminAppointmentsClient({
   initialAppointments,
 }: AdminAppointmentsClientProps) {
   const router = useRouter();
-  const { appointments, error } = useAdminAppointmentsLive(initialAppointments);
+  const { appointments } = useAppointmentsRealtime(initialAppointments);
   const [query, setQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [statusDrafts, setStatusDrafts] = useState<Record<string, Appointment["status"]>>({});
@@ -101,13 +101,12 @@ export default function AdminAppointmentsClient({
     <div className="min-h-screen text-slate-100">
       <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
         <header className="border-b border-slate-800/80 pb-6">
-          <p className="text-sm font-medium text-emerald-400">Записи</p>
+          <p className="text-sm font-medium text-emerald-400">Управление записями</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            Все записи пациентов
+            Записи пациентов
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            Данные загружаются из таблицы записей. Здесь отображается полная история
-            обращений со статусами, датой визита и контактами.
+            Просмотр, фильтрация и управление всеми записями на приём. Изменяйте статусы и добавляйте комментарии
           </p>
         </header>
 
@@ -169,7 +168,6 @@ export default function AdminAppointmentsClient({
             Найдено записей:{" "}
             <span className="font-semibold text-white">{filteredAppointments.length}</span>
           </p>
-          {error ? <p className="mt-2 text-sm text-rose-300">{error}</p> : null}
         </section>
 
         {filteredAppointments.length === 0 ? (

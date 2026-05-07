@@ -45,6 +45,22 @@ export type HomeI18n = {
   ourServicesTitle: string;
   ourServicesMain: { title: string; bullets: string[]; image: string }[];
   ourServicesMinor: string[];
+  ourServicesCategories: {
+    title: string;
+    services: string[];
+  }[];
+  ourServicesFullListTitle: string;
+  ourServicesSearchPlaceholder: string;
+  ourServicesNoResults: string;
+  ourDoctorsTitle: string;
+  ourDoctorsSubtitle: string;
+  ourDoctorsBottomText: string;
+  ourDoctors: {
+    name: string;
+    specialty: string;
+    experience: string;
+    image: string;
+  }[];
   insightsTitle: string;
   insightsItems: { date: string; title: string; text: string; image?: string }[];
   footerDescription: string;

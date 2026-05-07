@@ -67,6 +67,7 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
       preferredDate: String(formData.get("preferredDate") ?? ""),
       preferredTime: String(formData.get("preferredTime") ?? ""),
       notes: String(formData.get("notes") ?? ""),
+      doctor: String(formData.get("doctor") ?? ""),
       lang,
     };
 
@@ -184,6 +185,17 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
               type="time"
               className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
             />
+            <select
+              name="doctor"
+              required
+              className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white"
+            >
+              <option value="">Выберите врача</option>
+              <option value="d1">Анна Мороз - Терапевт-стоматолог</option>
+              <option value="d2">Игорь Петреску - Ортодонт</option>
+              <option value="d3">Марина Раду - Хирург-имплантолог</option>
+              <option value="d4">Виктор Савин - Пародонтолог</option>
+            </select>
             <textarea
               name="notes"
               placeholder="Комментарий к записи"

@@ -9,11 +9,17 @@ type AdminPatientsClientProps = {
   initialAppointments: Appointment[];
 };
 
-const doctorNames = ["Анна Мороз", "Игорь Петреску", "Марина Раду", "Виктор Савин"];
+const doctors = [
+  { id: "d1", name: "Анна Мороз" },
+  { id: "d2", name: "Игорь Петреску" },
+  { id: "d3", name: "Марина Раду" },
+  { id: "d4", name: "Виктор Савин" },
+];
 
-function getDoctorNameByAppointmentId(appointmentId: string) {
-  const hash = appointmentId.charCodeAt(0) + appointmentId.charCodeAt(1);
-  return doctorNames[hash % doctorNames.length];
+function getDoctorName(doctorId: string | null) {
+  if (!doctorId) return "Не назначен";
+  const doctor = doctors.find((d) => d.id === doctorId);
+  return doctor ? doctor.name : "Не назначен";
 }
 
 export default function AdminPatientsClient({
@@ -82,13 +88,12 @@ export default function AdminPatientsClient({
     <div className="min-h-screen text-slate-100">
       <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
         <header className="border-b border-slate-800/80 pb-6">
-          <p className="text-sm font-medium text-emerald-400">Пациенты</p>
+          <p className="text-sm font-medium text-emerald-400">База пациентов</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            Клиенты со статусом записи «Завершен»
+            Пациенты клиники
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            Здесь хранится карточка клиента, история его обращений и лечащий врач.
-            Отображаются только завершенные записи.
+            Карточки пациентов с завершёнными приёмами, история обращений и контактная информация
           </p>
         </header>
 
@@ -208,7 +213,7 @@ export default function AdminPatientsClient({
                     </p>
                     <p className="mb-3 text-sm text-slate-300">
                       Лечащий врач:{" "}
-                      <span className="font-semibold text-white">{getDoctorNameByAppointmentId(patient.id)}</span>
+                      <span className="font-semibold text-white">{getDoctorName(patient.appointments[0].doctor_id)}</span>
                     </p>
                     <div className="grid gap-3">
                       {patient.appointments.map((historyItem) => (

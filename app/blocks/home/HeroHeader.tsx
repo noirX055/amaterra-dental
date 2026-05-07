@@ -19,6 +19,8 @@ export function HeroHeader({
   setIsLangOpen,
   setLang,
 }: HeroHeaderProps) {
+  console.log("HeroHeader render, current lang:", lang, "isOpen:", isLangOpen);
+
   return (
     <header className="hero-appear-soft hero-delay-1 relative flex items-center justify-between gap-4 px-6 py-5 sm:px-8">
       <a href="#" className="inline-flex h-14 flex-1 items-center overflow-visible pl-2 sm:pl-3">
@@ -49,57 +51,51 @@ export function HeroHeader({
       </nav>
 
       <div className="flex flex-1 items-center justify-end gap-2">
-        <div className="relative" ref={langMenuRef}>
+        <div className="relative">
           <button
             type="button"
-            onClick={() => setIsLangOpen((v) => !v)}
-            aria-label={`${t.languageLabel}: ${lang.toUpperCase()}`}
-            aria-haspopup="menu"
-            aria-expanded={isLangOpen}
+            onClick={() => {
+              console.log("Toggle menu, current:", isLangOpen);
+              setIsLangOpen(!isLangOpen);
+            }}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-black/10 bg-white/80 px-3 text-sm font-semibold text-zinc-900 shadow-sm backdrop-blur transition-colors hover:bg-white dark:border-white/10 dark:bg-zinc-950/70 dark:text-zinc-50 dark:hover:bg-zinc-950"
           >
             {lang.toUpperCase()}
-            <span aria-hidden="true" className="text-xs leading-none opacity-70">
-              ▾
-            </span>
+            <span className="text-xs leading-none opacity-70">▾</span>
           </button>
 
-          {isLangOpen ? (
+          {isLangOpen && (
             <div
-              role="menu"
-              aria-label={t.languageLabel}
-              className="absolute right-0 z-20 mt-2 w-40 overflow-hidden rounded-2xl border border-black/10 bg-white/90 p-1 shadow-lg backdrop-blur dark:border-white/10 dark:bg-zinc-950/85"
+              ref={langMenuRef}
+              className="absolute right-0 z-[9999] mt-2 w-40 overflow-hidden rounded-2xl border border-black/10 bg-white p-1 shadow-2xl"
+              style={{ pointerEvents: 'auto' }}
             >
               {LANGS.map((code) => {
-                const active = code === lang;
+                console.log("Rendering button for:", code);
                 return (
-                  <button
+                  <div
                     key={code}
-                    type="button"
-                    role="menuitemradio"
-                    aria-checked={active}
-                    onClick={() => {
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log("Selected language (mousedown):", code);
                       setLang(code);
                       setIsLangOpen(false);
                     }}
-                    className={[
-                      "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition-colors",
-                      active
-                        ? "bg-black/6 text-zinc-950 dark:bg-white/8 dark:text-white"
-                        : "text-zinc-800 hover:bg-black/4 dark:text-zinc-100 dark:hover:bg-white/6",
-                    ].join(" ")}
+                    style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition-colors ${
+                      code === lang
+                        ? "bg-black/6 text-zinc-950"
+                        : "text-zinc-800 hover:bg-black/4"
+                    }`}
                   >
                     <span className="uppercase">{code}</span>
-                    {active ? (
-                      <span aria-hidden="true" className="opacity-80">
-                        ✓
-                      </span>
-                    ) : null}
-                  </button>
+                    {code === lang && <span className="opacity-80">✓</span>}
+                  </div>
                 );
               })}
             </div>
-          ) : null}
+          )}
         </div>
 
         <a

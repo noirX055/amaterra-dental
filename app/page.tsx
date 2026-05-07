@@ -7,11 +7,13 @@ import { HeroContent } from "./blocks/home/HeroContent";
 import { HeroHeader } from "./blocks/home/HeroHeader";
 import { SpecializationsBlock } from "./blocks/home/SpecializationsBlock";
 import { OurServicesBlock } from "./blocks/home/OurServicesBlock";
+import { OurDoctorsBlock } from "./blocks/home/OurDoctorsBlock";
 import { ReviewsBlock } from "./blocks/home/ReviewsBlock";
 import { FindUsBlock } from "./blocks/home/FindUsBlock";
 import { LatestInsightsBlock } from "./blocks/home/LatestInsightsBlock";
 import { FooterBlock } from "./blocks/home/FooterBlock";
 import { BookingModal } from "./blocks/home/BookingModal";
+import { ChatWidget } from "./blocks/home/ChatWidget";
 import { I18N, LANG_STORAGE_KEY } from "./blocks/home/i18n";
 import type { Lang } from "./blocks/home/types";
 
@@ -41,23 +43,12 @@ export default function Home() {
   useEffect(() => {
     if (!isLangOpen) return;
 
-    function onPointerDown(e: PointerEvent) {
-      const target = e.target;
-      if (!(target instanceof Node)) return;
-      if (langMenuRef.current?.contains(target)) return;
-      setIsLangOpen(false);
-    }
-
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setIsLangOpen(false);
     }
 
-    window.addEventListener("pointerdown", onPointerDown, { capture: true });
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener("pointerdown", onPointerDown, {
-        capture: true,
-      } as AddEventListenerOptions);
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [isLangOpen]);
@@ -83,7 +74,10 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const t = useMemo(() => I18N[lang], [lang]);
+  const t = useMemo(() => {
+    console.log("Language changed to:", lang);
+    return I18N[lang];
+  }, [lang]);
 
   return (
     <div className="flex min-h-screen flex-1 flex-col bg-white font-sans text-zinc-900 dark:bg-white dark:text-zinc-900">
@@ -107,9 +101,10 @@ export default function Home() {
         <AboutUsBlock t={t} />
         <SpecializationsBlock t={t} />
         <OurServicesBlock t={t} />
+        <OurDoctorsBlock t={t} />
         <ReviewsBlock t={t} />
         <FindUsBlock t={t} lang={lang} />
-        <LatestInsightsBlock t={t} />
+        <LatestInsightsBlock t={t} lang={lang} />
       </main>
       <BookingModal
         t={t}
@@ -117,6 +112,7 @@ export default function Home() {
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
       />
+      <ChatWidget lang={lang} />
       <FooterBlock t={t} />
     </div>
   );

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Appointment } from "./adminTypes";
 import { statusLabels, statusStyles } from "./adminTypes";
-import { useAdminAppointmentsLive } from "./useAdminAppointmentsLive";
+import { useAppointmentsRealtime } from "./_components/use-appointments-realtime";
 
 type AdminCalendarClientProps = {
   initialAppointments: Appointment[];
@@ -49,7 +49,7 @@ function buildMonthGrid(month: Date) {
 export default function AdminCalendarClient({
   initialAppointments,
 }: AdminCalendarClientProps) {
-  const { appointments } = useAdminAppointmentsLive(initialAppointments);
+  const { appointments } = useAppointmentsRealtime(initialAppointments);
   const today = toDateOnly(new Date());
 
   const [visibleMonth, setVisibleMonth] = useState(
@@ -82,178 +82,218 @@ export default function AdminCalendarClient({
   }, [monthCells, appointmentsByDate]);
 
   function prevMonth() {
-    setVisibleMonth(
-      (current) => new Date(current.getFullYear(), current.getMonth() - 1, 1)
-    );
+    setVisibleMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   }
 
   function nextMonth() {
-    setVisibleMonth(
-      (current) => new Date(current.getFullYear(), current.getMonth() + 1, 1)
-    );
+    setVisibleMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  }
+
+  function goToToday() {
+    const now = new Date();
+    setVisibleMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+    setSelectedDate(toDateOnly(now));
   }
 
   return (
-    <div className="min-h-screen text-slate-100">
-      <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
-        <header className="flex flex-col gap-4 border-b border-slate-800/80 pb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-emerald-400">Календарь записей</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-              Расписание пациентов
-            </h1>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-              Выберите дату в календаре, чтобы увидеть все назначения и их статус.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm text-slate-300">
-            Записей в месяце: <span className="font-semibold text-white">{monthTotal}</span>
-          </div>
-        </header>
+    <>
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Календарь
+          </h1>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Визуальный календарь всех записей. Выберите дату для просмотра деталей приёмов
+          </p>
+        </div>
+        <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-700 dark:bg-gray-800">
+          <span className="text-sm text-gray-600 dark:text-gray-400">Записей в месяце:</span>
+          <span className="text-lg font-bold text-gray-900 dark:text-white">{monthTotal}</span>
+        </div>
+      </div>
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-          <section className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-4 sm:p-5">
-            <div className="mb-4 flex items-center justify-between">
+      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        {/* Calendar */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          {/* Calendar Header */}
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-semibold capitalize text-gray-900 dark:text-white">
+              {formatMonthLabel(visibleMonth)}
+            </h2>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={goToToday}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              >
+                Сегодня
+              </button>
               <button
                 type="button"
                 onClick={prevMonth}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-600 bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                 aria-label="Предыдущий месяц"
               >
-                <span aria-hidden="true">←</span>
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
-              <h2 className="text-lg font-semibold capitalize text-white">
-                {formatMonthLabel(visibleMonth)}
-              </h2>
               <button
                 type="button"
                 onClick={nextMonth}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-600 bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                 aria-label="Следующий месяц"
               >
-                <span aria-hidden="true">→</span>
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </button>
             </div>
+          </div>
 
-            <div className="grid grid-cols-7 gap-2">
-              {WEEK_DAYS.map((dayName) => (
-                <div
-                  key={dayName}
-                  className="rounded-xl border border-slate-700 bg-slate-800/70 px-2 py-2 text-center text-xs font-semibold uppercase tracking-wide text-slate-300"
+          {/* Week Days */}
+          <div className="mb-2 grid grid-cols-7 gap-2">
+            {WEEK_DAYS.map((day) => (
+              <div
+                key={day}
+                className="py-2 text-center text-xs font-semibold text-gray-500 dark:text-gray-400"
+              >
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar Grid */}
+          <div className="grid grid-cols-7 gap-2">
+            {monthCells.map((day) => {
+              const key = formatDateKey(day);
+              const dayAppointments = appointmentsByDate[key] ?? [];
+              const isToday = formatDateKey(day) === formatDateKey(today);
+              const isSelected = formatDateKey(day) === formatDateKey(selectedDate);
+              const isCurrentMonth = day.getMonth() === visibleMonth.getMonth();
+              const hasAppointments = dayAppointments.length > 0;
+
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSelectedDate(day)}
+                  className={`group relative aspect-square rounded-lg border p-2 text-sm transition-all ${
+                    isSelected
+                      ? "border-emerald-500 bg-emerald-50 shadow-md dark:border-emerald-600 dark:bg-emerald-900/20"
+                      : isToday
+                      ? "border-blue-300 bg-blue-50 dark:border-blue-700 dark:bg-blue-900/20"
+                      : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
+                  } ${!isCurrentMonth ? "opacity-40" : ""}`}
                 >
-                  {dayName}
-                </div>
-              ))}
+                  <div className="flex h-full flex-col">
+                    <span
+                      className={`text-sm font-medium ${
+                        isSelected
+                          ? "text-emerald-700 dark:text-emerald-400"
+                          : isToday
+                          ? "text-blue-700 dark:text-blue-400"
+                          : "text-gray-900 dark:text-white"
+                      }`}
+                    >
+                      {day.getDate()}
+                    </span>
+                    {hasAppointments && (
+                      <div className="mt-auto flex flex-col gap-0.5">
+                        {dayAppointments.slice(0, 2).map((apt) => (
+                          <div
+                            key={apt.id}
+                            className={`h-1 w-full rounded-full ${
+                              apt.status === "pending"
+                                ? "bg-amber-400"
+                                : apt.status === "confirmed"
+                                ? "bg-emerald-400"
+                                : apt.status === "completed"
+                                ? "bg-blue-400"
+                                : "bg-rose-400"
+                            }`}
+                          />
+                        ))}
+                        {dayAppointments.length > 2 && (
+                          <span className="mt-0.5 text-xs text-gray-500">+{dayAppointments.length - 2}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-              {monthCells.map((day) => {
-                const key = formatDateKey(day);
-                const dayAppointments = appointmentsByDate[key] ?? [];
-                const isCurrentMonth = day.getMonth() === visibleMonth.getMonth();
-                const isToday = key === formatDateKey(today);
-                const isSelected = key === selectedDateKey;
-
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSelectedDate(toDateOnly(day))}
-                    className={`min-h-[108px] rounded-2xl border p-2 text-left transition ${
-                      isSelected
-                        ? "border-emerald-400 bg-emerald-500/15 ring-1 ring-emerald-500/40"
-                        : "border-slate-700 bg-slate-900/50 hover:border-emerald-500/60 hover:bg-slate-800/70"
-                    } ${!isCurrentMonth ? "opacity-35" : ""}`}
-                  >
-                    <div className="mb-2 flex items-center justify-between">
-                      <span
-                        className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
-                          isToday ? "bg-emerald-500 text-white" : "bg-slate-800 text-slate-300"
-                        }`}
-                      >
-                        {day.getDate()}
-                      </span>
-                      {dayAppointments.length > 0 ? (
-                        <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[11px] font-semibold text-white">
-                          {dayAppointments.length}
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <div className="space-y-1">
-                      {dayAppointments.slice(0, 2).map((appointment) => (
-                        <p
-                          key={appointment.id}
-                          className="truncate rounded-lg bg-slate-800 px-2 py-1 text-[11px] text-slate-200"
-                        >
-                          {formatTime(appointment.preferred_time)} - {appointment.first_name}
-                        </p>
-                      ))}
-                      {dayAppointments.length > 2 ? (
-                        <p className="text-[11px] font-medium text-slate-400">
-                          +{dayAppointments.length - 2} еще
-                        </p>
-                      ) : null}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          <section className="rounded-[24px] border border-slate-700 bg-slate-900/50 p-5">
-            <h3 className="text-lg font-semibold text-white">
+        {/* Appointments List */}
+        <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+            <h3 className="font-semibold text-gray-900 dark:text-white">
               {selectedDate.toLocaleDateString("ru-RU", {
-                day: "2-digit",
+                day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
             </h3>
-            <p className="mt-1 text-sm text-slate-300">
-              Записей: {selectedDateAppointments.length}
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {selectedDateAppointments.length} {selectedDateAppointments.length === 1 ? "запись" : "записей"}
             </p>
+          </div>
 
+          <div className="max-h-[600px] overflow-y-auto p-6">
             {selectedDateAppointments.length === 0 ? (
-              <div className="mt-6 rounded-2xl border border-dashed border-slate-700 px-4 py-8 text-center text-sm text-slate-400">
-                На выбранную дату записей нет.
+              <div className="py-12 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+                  <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Нет записей на эту дату
+                </p>
               </div>
             ) : (
-              <ul className="mt-4 space-y-3">
+              <div className="space-y-3">
                 {selectedDateAppointments.map((appointment) => (
-                  <li
+                  <div
                     key={appointment.id}
-                    className="rounded-2xl border border-slate-700 bg-slate-950/60 p-4"
+                    className="rounded-lg border border-gray-200 bg-gray-50 p-4 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-700/50 dark:hover:bg-gray-700"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-base font-semibold text-white">
-                          {appointment.first_name} {appointment.last_name}
-                        </p>
-                        <p className="mt-1 text-sm text-slate-300">
-                          {appointment.phone}
-                          {appointment.email ? ` - ${appointment.email}` : ""}
-                        </p>
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-semibold text-white">
+                        {appointment.first_name.charAt(0)}
+                        {appointment.last_name.charAt(0)}
                       </div>
-                      <span
-                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}
-                      >
-                        {statusLabels[appointment.status]}
-                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">
+                              {appointment.first_name} {appointment.last_name}
+                            </h4>
+                            <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+                              {appointment.phone}
+                            </p>
+                          </div>
+                          <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}>
+                            {statusLabels[appointment.status]}
+                          </span>
+                        </div>
+                        <div className="mt-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {formatTime(appointment.preferred_time)}
+                        </div>
+                      </div>
                     </div>
-                    <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
-                      <span className="rounded-lg bg-slate-800 px-2 py-1 font-medium text-slate-100">
-                        {formatTime(appointment.preferred_time)}
-                      </span>
-                      <span>Язык: {appointment.lang.toUpperCase()}</span>
-                    </div>
-                    {appointment.notes ? (
-                      <p className="mt-3 text-sm text-slate-300">{appointment.notes}</p>
-                    ) : null}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
-          </section>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

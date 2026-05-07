@@ -10,6 +10,7 @@ export type Appointment = {
   notes: string | null;
   admin_comment: string | null;
   lang: "ru" | "ro" | "en";
+  doctor_id: string | null;
   created_at: string;
 };
 

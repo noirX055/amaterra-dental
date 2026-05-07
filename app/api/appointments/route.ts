@@ -12,6 +12,7 @@ type AppointmentPayload = {
   preferredTime?: string;
   notes?: string;
   lang?: "ru" | "ro" | "en";
+  doctor?: string;
 };
 
 export async function POST(request: Request) {
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
     const preferredTime = (body.preferredTime ?? "").trim() || null;
     const notes = (body.notes ?? "").trim() || null;
     const lang = body.lang === "ro" || body.lang === "en" ? body.lang : "ru";
+    const doctor = (body.doctor ?? "").trim() || null;
 
     if (!firstName || !lastName || !phone || !preferredDate) {
       return NextResponse.json(
@@ -44,6 +46,7 @@ export async function POST(request: Request) {
       preferred_time: preferredTime,
       notes,
       lang,
+      doctor_id: doctor,
       status: "pending",
     });
 
