@@ -227,10 +227,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctorsSubtitle: "Команда профессионалов с многолетним опытом работы",
     ourDoctorsBottomText: "Каждый врач нашей клиники регулярно проходит обучение и повышает квалификацию, чтобы предоставлять вам лучший уровень стоматологической помощи",
     ourDoctors: [
-      { name: "Имя Фамилия", specialty: "Стоматолог-терапевт", experience: "15 лет опыта", image: "/doctor-1.jpg" },
-      { name: "Имя Фамилия", specialty: "Стоматолог-хирург", experience: "12 лет опыта", image: "/doctor-2.jpg" },
-      { name: "Имя Фамилия", specialty: "Стоматолог-ортопед", experience: "10 лет опыта", image: "/doctor-3.jpg" },
-      { name: "Имя Фамилия", specialty: "Стоматолог-ортодонт", experience: "8 лет опыта", image: "/doctor-4.jpg" }
+      { name: "Ceban Ruslan", specialty: "Медик-генералист", image: "/doctor-1.jpg" },
+      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/doctor-2.jpg" },
+      { name: "Alexandra Ursu", specialty: "Терапевт", image: "/doctor-3.jpg" },
+      { name: "Dumitru Gurenco", specialty: "Терапевт-протезист", image: "/doctor-4.jpg" },
+      { name: "Natalia Lozova", specialty: "Ортодонт", image: "/doctor-5.jpg" }
     ],
     reviewsTitle: "Что говорят наши клиенты:",
     reviewsDescription: "Откройте для себя искренние отзывы наших благодарных пациентов и убедитесь в непревзойденном качестве наших стоматологических услуг!",
@@ -480,10 +481,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctorsSubtitle: "Echipă de profesioniști cu ani de experiență",
     ourDoctorsBottomText: "Fiecare medic din clinica noastră urmează în mod regulat cursuri de formare și își îmbunătățește calificările pentru a vă oferi cel mai bun nivel de îngrijire stomatologică",
     ourDoctors: [
-      { name: "Nume Prenume", specialty: "Stomatolog terapeut", experience: "15 ani experiență", image: "/doctor-1.jpg" },
-      { name: "Nume Prenume", specialty: "Stomatolog chirurg", experience: "12 ani experiență", image: "/doctor-2.jpg" },
-      { name: "Nume Prenume", specialty: "Stomatolog ortoped", experience: "10 ani experiență", image: "/doctor-3.jpg" },
-      { name: "Nume Prenume", specialty: "Stomatolog ortodont", experience: "8 ani experiență", image: "/doctor-4.jpg" }
+      { name: "Ceban Ruslan", specialty: "Medic Generalist", image: "/doctor-1.jpg" },
+      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/doctor-2.jpg" },
+      { name: "Alexandra Ursu", specialty: "Terapeut", image: "/doctor-3.jpg" },
+      { name: "Dumitru Gurenco", specialty: "Terapeut Protezist", image: "/doctor-4.jpg" },
+      { name: "Natalia Lozova", specialty: "Ortodont", image: "/doctor-5.jpg" }
     ],
     reviewsTitle: "Vedeți ce spun clienții noștri:",
     reviewsDescription: "Îmbarcați-vă într-o călătorie prin experiențe sincere - descoperiți laudele și mărturiile pacienților noștri stimabili, dezvăluind calitatea de neegalat a serviciilor noastre!",
@@ -733,10 +735,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctorsSubtitle: "Team of professionals with years of experience",
     ourDoctorsBottomText: "Each doctor at our clinic regularly undergoes training and improves their qualifications to provide you with the best level of dental care",
     ourDoctors: [
-      { name: "First Last", specialty: "General Dentist", experience: "15 years experience", image: "/doctor-1.jpg" },
-      { name: "First Last", specialty: "Oral Surgeon", experience: "12 years experience", image: "/doctor-2.jpg" },
-      { name: "First Last", specialty: "Prosthodontist", experience: "10 years experience", image: "/doctor-3.jpg" },
-      { name: "First Last", specialty: "Orthodontist", experience: "8 years experience", image: "/doctor-4.jpg" }
+      { name: "Ceban Ruslan", specialty: "General Practitioner", image: "/doctor-1.jpg" },
+      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/doctor-2.jpg" },
+      { name: "Alexandra Ursu", specialty: "Therapist", image: "/doctor-3.jpg" },
+      { name: "Dumitru Gurenco", specialty: "Therapist Prosthetist", image: "/doctor-4.jpg" },
+      { name: "Natalia Lozova", specialty: "Orthodontist", image: "/doctor-5.jpg" }
     ],
     reviewsTitle: "See What Our Clients Have to Say:",
     reviewsDescription: "Embark on a Journey through Heartfelt Experiences - Unveil the Praises and Testimonials from Our Esteemed Clients, Unraveling the Unmatched Quality of Our Services!",

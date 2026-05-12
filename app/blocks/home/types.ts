@@ -58,7 +58,6 @@ export type HomeI18n = {
   ourDoctors: {
     name: string;
     specialty: string;
-    experience: string;
     image: string;
   }[];
   insightsTitle: string;

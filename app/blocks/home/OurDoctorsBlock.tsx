@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { HomeI18n } from "./types";
 
 interface Props {
@@ -35,14 +36,13 @@ export function OurDoctorsBlock({ t }: Props) {
           >
             {/* Image Container */}
             <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative h-32 w-32 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-400 transition-transform duration-500 group-hover:scale-110">
-                  {/* Placeholder for doctor image */}
-                  <div className="absolute inset-0 flex items-center justify-center text-6xl text-zinc-500">
-                    👨‍⚕️
-                  </div>
-                </div>
-              </div>
+              <Image
+                src={doctor.image}
+                alt={doctor.name}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              />
 
               {/* Decorative gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -54,17 +54,9 @@ export function OurDoctorsBlock({ t }: Props) {
                 {doctor.name}
               </h3>
 
-              <div className="flex flex-col gap-2">
-                <p className="text-base font-medium text-zinc-600">
-                  {doctor.specialty}
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  <p className="text-sm text-zinc-500">
-                    {doctor.experience}
-                  </p>
-                </div>
-              </div>
+              <p className="text-base font-medium text-zinc-600">
+                {doctor.specialty}
+              </p>
 
               {/* Decorative element */}
               <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-zinc-900 to-zinc-600 transition-all duration-500 group-hover:w-full" />
