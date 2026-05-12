@@ -47,12 +47,12 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
     const completed = appointments.filter((a) => a.status === "completed").length;
     const cancelled = appointments.filter((a) => a.status === "cancelled").length;
 
-    return [
+    const result: StatCardProps[] = [
       {
         title: "Ожидает ответа",
         count: pending,
         percentage: Math.round((pending / total) * 100),
-        trend: pending > confirmed ? "up" : "neutral" as const,
+        trend: pending > confirmed ? "up" : "neutral",
         icon: (
           <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -65,7 +65,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         title: "Подтверждено",
         count: confirmed,
         percentage: Math.round((confirmed / total) * 100),
-        trend: "up" as const,
+        trend: "up",
         icon: (
           <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -78,7 +78,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         title: "Завершено",
         count: completed,
         percentage: Math.round((completed / total) * 100),
-        trend: "up" as const,
+        trend: "up",
         icon: (
           <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -91,7 +91,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         title: "Отменено",
         count: cancelled,
         percentage: Math.round((cancelled / total) * 100),
-        trend: cancelled > 0 ? "down" : "neutral" as const,
+        trend: cancelled > 0 ? "down" : "neutral",
         icon: (
           <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -101,6 +101,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         bgColor: "bg-rose-50",
       },
     ];
+    return result;
   }, [appointments]);
 
   return (

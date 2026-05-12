@@ -63,6 +63,7 @@ export default function BlogPostPage() {
 
     // Translate to selected language
     async function translate() {
+      if (!post) return;
       setIsTranslating(true);
       try {
         const [title, excerpt, content] = await Promise.all([

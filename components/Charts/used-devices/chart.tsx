@@ -28,6 +28,7 @@ export function DonutChart({ data }: PropsType) {
         vertical: 5,
       },
       formatter: (legendName, opts) => {
+        if (!opts) return legendName;
         const { seriesPercent } = opts.w.globals;
         return `${legendName}: ${seriesPercent[opts.seriesIndex]}%`;
       },

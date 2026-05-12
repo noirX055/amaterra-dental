@@ -152,29 +152,19 @@ export function Sidebar() {
                             )}
                           </div>
                         ) : (
-                          (() => {
-                            const href =
-                              "url" in item
-                                ? item.url + ""
-                                : "/" +
-                                  item.title.toLowerCase().split(" ").join("-");
+                          <MenuItem
+                            className="flex items-center gap-3 py-3"
+                            as="link"
+                            href={item.url}
+                            isActive={pathname === item.url}
+                          >
+                            <item.icon
+                              className="size-6 shrink-0"
+                              aria-hidden="true"
+                            />
 
-                            return (
-                              <MenuItem
-                                className="flex items-center gap-3 py-3"
-                                as="link"
-                                href={href}
-                                isActive={pathname === href}
-                              >
-                                <item.icon
-                                  className="size-6 shrink-0"
-                                  aria-hidden="true"
-                                />
-
-                                <span>{item.title}</span>
-                              </MenuItem>
-                            );
-                          })()
+                            <span>{item.title}</span>
+                          </MenuItem>
                         )}
                       </li>
                     ))}
