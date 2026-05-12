@@ -7,11 +7,15 @@ import { Analytics } from "@/components/Analytics";
 const montserrat = Montserrat({
   variable: "--font-geist-sans",
   subsets: ["latin", "cyrillic"],
+  display: "swap",
+  preload: true,
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin", "cyrillic"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
