@@ -2,4 +2,8 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/amaterra/public_html/
+    - export NODEJS_VERSION=18
+    - source /opt/cpanel/ea-nodejs18/enable
+    - npm install
+    - npm run build
     - /bin/cp -R out/* $DEPLOYPATH
