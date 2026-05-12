@@ -10,6 +10,7 @@ const optimizeImage = async (inputPath) => {
     const tempPath = inputPath + '.tmp';
 
     const info = await sharp(inputPath)
+      .rotate() // Автоматически исправляет ориентацию по EXIF
       .resize(800, 1067, { // 3:4 соотношение для врачей
         fit: 'cover',
         position: 'center'
