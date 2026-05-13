@@ -15,7 +15,7 @@ export function AboutUsBlock({ t }: AboutUsBlockProps) {
       <div className="grid gap-6 lg:min-h-[620px] lg:grid-cols-[0.95fr_1.3fr_0.95fr] lg:grid-rows-[1fr_auto]">
         <div className="relative mx-auto h-[280px] w-full max-w-[300px] overflow-hidden rounded-[24px] lg:row-span-2 lg:h-full lg:min-h-[560px]">
           <Image
-            src="/about-main.webp"
+            src="/photodoctors.webp"
             alt="Dental care close up"
             fill
             className="object-cover"
@@ -42,7 +42,7 @@ export function AboutUsBlock({ t }: AboutUsBlockProps) {
 
         <div className="relative mx-auto h-[240px] w-full max-w-[300px] overflow-hidden rounded-[24px] lg:h-[320px]">
           <Image
-            src="/about-side.webp"
+            src="/doctorwork.webp"
             alt="Patient smiling in clinic"
             fill
             className="object-cover"
@@ -52,7 +52,7 @@ export function AboutUsBlock({ t }: AboutUsBlockProps) {
 
         <div className="relative mx-auto h-[170px] w-full max-w-[500px] overflow-hidden rounded-[22px] lg:col-start-2 lg:h-[210px] lg:w-[86%]">
           <Image
-            src="/about-bottom.webp"
+            src="/doctor work2.webp"
             alt="Dental smile detail"
             fill
             className="object-cover"
