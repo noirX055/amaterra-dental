@@ -4,7 +4,7 @@ export function HeroBackground() {
   return (
     <>
       <Image
-        src="/banner-bg-v2.jpg"
+        src="/banner-bg-v2.webp"
         alt=""
         fill
         preload
