@@ -3,9 +3,10 @@ import type { HomeI18n } from "./types";
 
 type AboutUsBlockProps = {
   t: HomeI18n;
+  onBookClick: () => void;
 };
 
-export function AboutUsBlock({ t }: AboutUsBlockProps) {
+export function AboutUsBlock({ t, onBookClick }: AboutUsBlockProps) {
   return (
     <section
       id="about"
@@ -13,12 +14,12 @@ export function AboutUsBlock({ t }: AboutUsBlockProps) {
       className="rounded-[28px] bg-zinc-100 px-6 py-12 text-zinc-900 sm:px-10 sm:py-16"
     >
       <div className="grid gap-6 lg:min-h-[620px] lg:grid-cols-[0.95fr_1.3fr_0.95fr] lg:grid-rows-[1fr_auto]">
-        <div className="relative mx-auto h-[280px] w-full max-w-[300px] overflow-hidden rounded-[24px] lg:row-span-2 lg:h-full lg:min-h-[560px]">
+        <div className="relative mx-auto h-[280px] w-full max-w-[300px] lg:row-span-2 lg:h-full lg:min-h-[560px]">
           <Image
-            src="/photodoctors.webp"
+            src="/melnic.webp"
             alt="Dental care close up"
             fill
-            className="object-cover"
+            className="object-contain rounded-[24px]"
             sizes="(min-width: 1024px) 300px, 100vw"
           />
         </div>
@@ -31,13 +32,14 @@ export function AboutUsBlock({ t }: AboutUsBlockProps) {
           <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-zinc-600 sm:text-base">
             {t.aboutDescription}
           </p>
-          <a
-            href="#"
+          <button
+            type="button"
+            onClick={onBookClick}
             className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-black px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
           >
             {t.aboutCta}
             <span aria-hidden="true">→</span>
-          </a>
+          </button>
         </div>
 
         <div className="relative mx-auto h-[240px] w-full max-w-[300px] overflow-hidden rounded-[24px] lg:h-[320px]">
@@ -55,7 +57,7 @@ export function AboutUsBlock({ t }: AboutUsBlockProps) {
             src="/doctor work2.webp"
             alt="Dental smile detail"
             fill
-            className="object-cover"
+            className="object-cover object-top"
             sizes="(min-width: 1024px) 500px, 100vw"
           />
         </div>

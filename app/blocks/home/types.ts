@@ -9,6 +9,12 @@ export type HomeI18n = {
   tagline: string;
   title: string;
   description: string;
+  tagline2: string;
+  title2: string;
+  description2: string;
+  tagline3: string;
+  title3: string;
+  description3: string;
   book: string;
   learn: string;
   languageLabel: string;
@@ -55,6 +61,8 @@ export type HomeI18n = {
   ourDoctorsTitle: string;
   ourDoctorsSubtitle: string;
   ourDoctorsBottomText: string;
+  workGalleryTitle: string;
+  workGallerySubtitle: string;
   ourDoctors: {
     name: string;
     specialty: string;
@@ -72,4 +80,5 @@ export type HomeI18n = {
   footerLinksCol1: string[];
   footerLinksCol2: string[];
   footerSocial: string[];
+  footerSocialLinks: string[];
 };

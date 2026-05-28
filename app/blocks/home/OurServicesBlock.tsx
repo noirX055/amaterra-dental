@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { HomeI18n } from "./types";
 
 interface Props {
@@ -11,18 +11,20 @@ export function OurServicesBlock({ t }: Props) {
   const [openCategory, setOpenCategory] = useState<number | null>(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredCategories = t.ourServicesCategories.map(category => ({
-    ...category,
-    services: category.services.filter(service =>
-      service.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  })).filter(category => category.services.length > 0);
+  const filteredCategories = useMemo(() => {
+    return t.ourServicesCategories.map(category => ({
+      ...category,
+      services: category.services.filter(service =>
+        service.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    })).filter(category => category.services.length > 0);
+  }, [t.ourServicesCategories, searchQuery]);
 
   return (
     <section
       id="services"
       data-reveal-on-scroll
-      className="relative mx-auto mt-24 flex w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8 opacity-0 transition-opacity duration-700 translate-y-8 [&.is-visible]:opacity-100 [&.is-visible]:translate-y-0"
+      className="relative mx-auto mt-24 flex w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8 opacity-0 transition-opacity duration-500 translate-y-4 [&.is-visible]:opacity-100 [&.is-visible]:translate-y-0"
     >
       <h2 className="mb-10 text-5xl sm:text-6xl font-medium tracking-tight text-zinc-900">
         {t.ourServicesTitle}
@@ -56,6 +58,7 @@ export function OurServicesBlock({ t }: Props) {
                 <img
                   src={service.image}
                   alt={service.title}
+                  loading="lazy"
                   className="w-full h-auto object-contain drop-shadow-2xl mix-blend-multiply"
                 />
               </div>

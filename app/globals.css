@@ -101,6 +101,20 @@ html {
   }
 }
 
+@keyframes flipIn {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg);
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+}
+
 .hero-appear {
   animation: hero-appear 700ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
 }

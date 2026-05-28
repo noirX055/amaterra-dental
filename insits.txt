@@ -1,0 +1,175 @@
+Insights
+Modern HTTP Est savings of 530 ms
+HTTP/2 and HTTP/3 offer many benefits over HTTP/1.1, such as multiplexing. Learn more about using modern HTTP.FCPLCPUnscored
+URL
+Protocol
+amaterra.md 1st party
+http://amaterra.md
+http/1.1
+…media/44fac91e6f2d2b1b-s.p.0f~sf101j6mzi.woff2(amaterra.md)
+http/1.1
+…media/70bc3e132a0a741e-s.p.1409xf.ylxg8g.woff2(amaterra.md)
+http/1.1
+…media/cc545e633e20c56d-s.p.0dza.stei.9v7.woff2(amaterra.md)
+http/1.1
+…media/e8f2fbee2754df70-s.p.0fzkl03jw-sdz.woff2(amaterra.md)
+http/1.1
+/_next/image?url=%2Fbanner-bg-v2.jpg&w=828&q=75(amaterra.md)
+http/1.1
+/spec-1.webp(amaterra.md)
+http/1.1
+/spec-2.webp(amaterra.md)
+http/1.1
+/spec-3.webp(amaterra.md)
+http/1.1
+/service-probe.png(amaterra.md)
+http/1.1
+/service-tooth.png(amaterra.md)
+http/1.1
+/logo.webp(amaterra.md)
+http/1.1
+…chunks/11m-qj~g.45u0.css(amaterra.md)
+http/1.1
+…chunks/0n~ytqm-v-qqg.css(amaterra.md)
+http/1.1
+…chunks/0t1et0tty8o9s.js(amaterra.md)
+http/1.1
+…chunks/0wuoz_j7v75yk.js(amaterra.md)
+http/1.1
+…chunks/11e1vwxo8eho9.js(amaterra.md)
+http/1.1
+…chunks/0v9c2uadhpd-i.js(amaterra.md)
+http/1.1
+…chunks/0.wiw-_135pal.js(amaterra.md)
+http/1.1
+…chunks/0pqt~8bl3ukh4.js(amaterra.md)
+http/1.1
+…chunks/turbopack-07oipfx5u6nu_.js(amaterra.md)
+http/1.1
+…chunks/0btzhfpezo7hq.js(amaterra.md)
+http/1.1
+…chunks/0d3shmwh5_nmn.js(amaterra.md)
+http/1.1
+…chunks/08t3wg5nisvpi.js(amaterra.md)
+http/1.1
+…chunks/0y6s5_7~yswll.js(amaterra.md)
+http/1.1
+…chunks/12hei~awoigll.js(amaterra.md)
+http/1.1
+/icons/manifest.json(amaterra.md)
+http/1.1
+/_next/image?url=%2Flogo.webp&w=640&q=75(amaterra.md)
+http/1.1
+/_next/image?url=%2Fabout-main.webp&w=828&q=75(amaterra.md)
+http/1.1
+/_next/image?url=%2Fabout-side.webp&w=828&q=75(amaterra.md)
+http/1.1
+/_next/image?url=%2Fabout-bottom.webp&w=828&q=75(amaterra.md)
+http/1.1
+/icons/favicon.ico(amaterra.md)
+http/1.1
+/icons/favicon-32x32.png(amaterra.md)
+http/1.1
+Legacy JavaScript Est savings of 14 KiB
+Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren't necessary for modern browsers. Consider modifying your JavaScript build process to not transpile Baseline features, unless you know you must support older browsers. Learn why most sites can deploy ES6+ code without transpilingFCPLCPUnscored
+URL
+Wasted bytes
+amaterra.md 1st party
+13.6 KiB
+…chunks/0v9c2uadhpd-i.js(amaterra.md)
+13.6 KiB
+0v9c2uadhpd-i.js:1
+Array.prototype.at
+0v9c2uadhpd-i.js:1
+Array.prototype.flat
+0v9c2uadhpd-i.js:1
+Array.prototype.flatMap
+0v9c2uadhpd-i.js:1
+Object.fromEntries
+0v9c2uadhpd-i.js:1
+Object.hasOwn
+0v9c2uadhpd-i.js:1
+String.prototype.trimEnd
+0v9c2uadhpd-i.js:1
+String.prototype.trimStart
+Render-blocking requests Est savings of 130 ms
+Requests are blocking the page's initial render, which may delay LCP. Deferring or inlining can move these network requests out of the critical path.FCPLCPUnscored
+URL
+Transfer Size
+Duration
+amaterra.md 1st party
+22.0 KiB	420 ms
+…chunks/11m-qj~g.45u0.css(amaterra.md)
+1.4 KiB
+170 ms
+…chunks/0n~ytqm-v-qqg.css(amaterra.md)
+20.6 KiB
+250 ms
+LCP breakdown
+Each subpart has specific improvement strategies. Ideally, most of the LCP time should be spent on loading the resources, not within delays.LCPUnscored
+Subpart
+Duration
+Time to first byte
+40 ms
+Resource load delay
+40 ms
+Resource load duration
+530 ms
+Element render delay
+2,020 ms
+img.pointer-events-none.absolute.inset-0.object-cover.opacity-85.brightness-100.saturate-90
+LCP request discovery
+Optimize LCP by making the LCP image discoverable from the HTML immediately, and avoiding lazy-loadingLCPUnscored
+fetchpriority=high should be applied
+Request is discoverable in initial document
+lazy load not applied
+img.pointer-events-none.absolute.inset-0.object-cover.opacity-85.brightness-100.saturate-90
+Network dependency tree
+Avoid chaining critical requests by reducing the length of chains, reducing the download size of resources, or deferring the download of unnecessary resources to improve page load.LCPUnscored
+Maximum critical path latency: 875 ms
+Initial Navigation
+http://amaterra.md - 128 ms, 17.21 KiB
+/icons/manifest.json(amaterra.md) - 875 ms, 0.77 KiB
+…chunks/11m-qj~g.45u0.css(amaterra.md) - 366 ms, 1.41 KiB
+…chunks/0n~ytqm-v-qqg.css(amaterra.md) - 362 ms, 20.58 KiB
+Preconnected origins
+preconnect hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.
+no origins were preconnected
+Preconnect candidates
+Add preconnect hints to your most important origins, but try to use no more than 4.
+No additional origins are good candidates for preconnecting
+Use efficient cache lifetimes Est savings of 80 KiB
+Improve image delivery Est savings of 853 KiB
+Optimize DOM size
+3rd parties
+These insights are also available in the Chrome DevTools Performance Panel - record a trace to view more detailed information.
+Diagnostics
+Minimize main-thread work 3.7 s
+Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this. Learn how to minimize main-thread workTBTUnscored
+Category
+Time Spent
+Other
+2,290 ms
+Style & Layout
+743 ms
+Script Evaluation
+545 ms
+Rendering
+66 ms
+Script Parsing & Compilation
+50 ms
+Parse HTML & CSS
+26 ms
+Reduce unused JavaScript Est savings of 73 KiB
+Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. Learn how to reduce unused JavaScript.FCPLCPUnscored
+URL
+Transfer Size
+Est Savings
+amaterra.md 1st party
+130.6 KiB	72.9 KiB
+…chunks/0y6s5_7~yswll.js(amaterra.md)
+60.9 KiB
+48.9 KiB
+…chunks/0v9c2uadhpd-i.js(amaterra.md)
+69.7 KiB
+24.0 KiB

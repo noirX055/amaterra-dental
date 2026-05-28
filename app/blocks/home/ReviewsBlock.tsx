@@ -47,11 +47,7 @@ export function ReviewsBlock({ t }: Props) {
 
               <div className="flex items-center justify-between gap-4 mt-2">
                 <div className="flex items-center gap-3">
-                  <img
-                    src={item.avatar}
-                    alt={item.name}
-                    className="h-11 w-11 rounded-full object-cover shadow-sm bg-white"
-                  />
+
                   <div className="flex flex-col">
                     <span className="font-bold text-zinc-900 text-sm">
                       {item.name}

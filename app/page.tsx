@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AboutUsBlock } from "./blocks/home/AboutUsBlock";
+import { WorkGalleryBlock } from "./blocks/home/WorkGalleryBlock";
 import { HeroBackground } from "./blocks/home/HeroBackground";
 import { HeroContent } from "./blocks/home/HeroContent";
 import { HeroHeader } from "./blocks/home/HeroHeader";
@@ -98,8 +99,11 @@ export default function Home() {
           />
           <HeroContent t={t} onBookClick={() => setIsBookingModalOpen(true)} />
         </section>
-        <AboutUsBlock t={t} />
-        <SpecializationsBlock t={t} />
+        <AboutUsBlock t={t} onBookClick={() => setIsBookingModalOpen(true)} />
+        <WorkGalleryBlock t={t} />
+        <div id="specializations">
+          <SpecializationsBlock t={t} />
+        </div>
         <OurServicesBlock t={t} />
         <OurDoctorsBlock t={t} />
         <ReviewsBlock t={t} />

@@ -14,13 +14,21 @@ export const I18N: Record<Lang, HomeI18n> = {
     title: "Красивая улыбка без стресса",
     description:
       "Современная стоматология с мягким подходом, понятными ценами и быстрым приёмом.",
+    tagline2: "Ваше здоровье — наш приоритет.",
+    title2: "Профессиональная стоматология в Кишинёве",
+    description2:
+      "Опытные врачи, современное оборудование и индивидуальный подход к каждому пациенту.",
+    tagline3: "Комфорт и качество на первом месте.",
+    title3: "Современные кабинеты и оборудование",
+    description3:
+      "Атмосфера спокойствия и уверенности. Комфортные условия и передовые технологии.",
     book: "Записаться",
     learn: "Подробнее",
     languageLabel: "Язык",
     aboutLabel: "(о нас)",
-    aboutTitle: "Простой способ сэкономить на стоматологии",
+    aboutTitle: "Качество и забота о каждом пациенте",
     aboutDescription:
-      "Наша команда опытных стоматологов создаёт комфортную и тёплую атмосферу для каждого пациента. Мы предлагаем широкий спектр услуг.",
+      "Наша команда опытных стоматологов использует современные технологии и индивидуальный подход, чтобы каждый визит был комфортным и эффективным.",
     aboutCta: "Записаться",
     aboutSatisfaction: "98%",
     aboutSatisfactionLabel: "Удовлетворенность клиентов сервисом",
@@ -38,13 +46,13 @@ export const I18N: Record<Lang, HomeI18n> = {
         title: "Профессиональная чистка",
         description:
           "Поддержание оптимальной гигиены полости рта важно для сияющей улыбки и общего здоровья. Ультразвуковая чистка и Air Flow.",
-        image: "/spec-2.webp",
+        image: "/airflow.webp",
       },
       {
         title: "Надёжные пломбы",
         description:
           "Мы уделяем особое внимание долговечности и функциональности. Наши пломбы из современных композитов обеспечивают прочную реставрацию.",
-        image: "/spec-3.webp",
+        image: "/filingdental.webp",
       },
     ],
     findUsTitle: "Запишитесь\nонлайн",
@@ -226,9 +234,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctorsTitle: "Наши врачи",
     ourDoctorsSubtitle: "Команда профессионалов с многолетним опытом работы",
     ourDoctorsBottomText: "Каждый врач нашей клиники регулярно проходит обучение и повышает квалификацию, чтобы предоставлять вам лучший уровень стоматологической помощи",
+    workGalleryTitle: "Наши работы",
+    workGallerySubtitle: "Примеры наших стоматологических работ",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "Медик-генералист", image: "/doctor-1.jpg" },
-      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/doctor-2.jpg" },
+      { name: "Ceban Ruslan", specialty: "Медик-генералист", image: "/snapedit_1779977589291.jpeg" },
+      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/sorin robac.jpg" },
       { name: "Alexandra Ursu", specialty: "Терапевт", image: "/doctor-3.jpg" },
       { name: "Dumitru Gurenco", specialty: "Терапевт-протезист", image: "/doctor-4.jpg" },
       { name: "Natalia Lozova", specialty: "Ортодонт", image: "/doctor-5.jpg" }
@@ -237,9 +247,9 @@ export const I18N: Record<Lang, HomeI18n> = {
     reviewsDescription: "Откройте для себя искренние отзывы наших благодарных пациентов и убедитесь в непревзойденном качестве наших стоматологических услуг!",
     reviewsReadMore: "Читать далее >",
     reviewsItems: [
-      { text: "В клинике исключительно чисто и строго соблюдаются правила гигиены. Это придаёт уверенности и чувство безопасности во время лечения.", name: "Кристи Харли", role: "Менеджер по продукту", avatar: "https://i.pravatar.cc/150?u=1" },
-      { text: "Очень понравился профессионализм врачей. Лечение прошло совершенно безболезненно, а результат превзошел все мои ожидания.", name: "Селина Мартин", role: "Арт-директор", avatar: "https://i.pravatar.cc/150?u=2" },
-      { text: "Замечательная клиника! Приветливый персонал, современное оборудование и прозрачные цены. Всем рекомендую!", name: "Якоб Смит", role: "Аналитик", avatar: "https://i.pravatar.cc/150?u=3" }
+      { text: "Clinica este excepțional de curată, iar medicii sunt adevărați profesioniști. Tratamentul a fost complet nedureros!", name: "Elena Rusu", role: "Преподаватель", avatar: "https://i.pravatar.cc/150?u=12" },
+      { text: "Очень понравился профессионализм врачей. Лечение прошло совершенно безболезненно, а результат превзошел все мои ожидания.", name: "Vasile Cebotari", role: "Предприниматель", avatar: "https://i.pravatar.cc/150?u=13" },
+      { text: "Sunt extrem de mulțumit de profesionalismul medicilor. Tratamentul a fost la cel mai înalt nivel, iar rezultatul a depășit așteptările mele.", name: "Ion Munteanu", role: "Инженер", avatar: "https://i.pravatar.cc/150?u=11" }
     ],
     insightsTitle: "Последние статьи",
     insightsItems: [
@@ -256,7 +266,12 @@ export const I18N: Record<Lang, HomeI18n> = {
     footerCopyright: "Copyright © 2026 Amaterra. Все права защищены.",
     footerLinksCol1: ["О НАС", "УСЛУГИ"],
     footerLinksCol2: ["ВРАЧИ", "РАСПОЛОЖЕНИЕ"],
-    footerSocial: ["INSTAGRAM", "TWITTER", "FACEBOOK", "TIKTOK"]
+    footerSocial: ["INSTAGRAM", "FACEBOOK", "TIKTOK"],
+    footerSocialLinks: [
+      "https://www.instagram.com/amaterradental.md?igsh=dXkzY3VwbWVwNnlp",
+      "https://www.facebook.com/share/1CSTBNhNCY/",
+      "https://www.tiktok.com/@clinicaamaterra?_r=1&_t=ZS-96Kcns1SK8Y"
+    ]
   },
   ro: {
     brand: "amaterra.md",
@@ -268,13 +283,21 @@ export const I18N: Record<Lang, HomeI18n> = {
     title: "Stomatologie modernă, fără stres",
     description:
       "Tratament blând, prețuri clare și programare rapidă pentru toată familia.",
+    tagline2: "Sănătatea ta este prioritatea noastră.",
+    title2: "Stomatologie profesională în Chișinău",
+    description2:
+      "Medici experimentați, echipament modern și abordare individuală pentru fiecare pacient.",
+    tagline3: "Confort și calitate pe primul loc.",
+    title3: "Cabinete moderne și echipament",
+    description3:
+      "Atmosferă de calm și încredere. Condiții confortabile și tehnologii avansate.",
     book: "Programează-te",
     learn: "Află mai mult",
     languageLabel: "Limbă",
     aboutLabel: "(despre noi)",
-    aboutTitle: "O metodă simplă de a economisi la îngrijirea dentară",
+    aboutTitle: "Calitate și grijă pentru fiecare pacient",
     aboutDescription:
-      "Echipa noastră de profesioniști creează un mediu confortabil și prietenos pentru fiecare pacient. Oferim o gamă largă de servicii.",
+      "Echipa noastră de stomatologi experimentați folosește tehnologii moderne și abordare individuală pentru ca fiecare vizită să fie confortabilă și eficientă.",
     aboutCta: "Programează-te",
     aboutSatisfaction: "98%",
     aboutSatisfactionLabel: "Satisfacția clienților față de serviciu",
@@ -292,13 +315,13 @@ export const I18N: Record<Lang, HomeI18n> = {
         title: "Curățare profesională",
         description:
           "Menținerea igienei orale optime este esențială pentru un zâmbet radiant și bunăstarea generală. Curățare ultrasonică și Air Flow.",
-        image: "/spec-2.webp",
+        image: "/airflow.webp",
       },
       {
         title: "Plombe solide",
         description:
           "Acordăm o atenție deosebită durabilității și funcționalității. Plombele noastre din compozite moderne oferă o restaurare fiabilă.",
-        image: "/spec-3.webp",
+        image: "/filingdental.webp",
       },
     ],
     findUsTitle: "Programează-te\nonline",
@@ -480,9 +503,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctorsTitle: "Medicii noștri",
     ourDoctorsSubtitle: "Echipă de profesioniști cu ani de experiență",
     ourDoctorsBottomText: "Fiecare medic din clinica noastră urmează în mod regulat cursuri de formare și își îmbunătățește calificările pentru a vă oferi cel mai bun nivel de îngrijire stomatologică",
+    workGalleryTitle: "Lucrările noastre",
+    workGallerySubtitle: "Exemple ale lucrărilor noastre stomatologice",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "Medic Generalist", image: "/doctor-1.jpg" },
-      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/doctor-2.jpg" },
+      { name: "Ceban Ruslan", specialty: "Medic Generalist", image: "/snapedit_1779977589291.jpeg" },
+      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/sorin robac.jpg" },
       { name: "Alexandra Ursu", specialty: "Terapeut", image: "/doctor-3.jpg" },
       { name: "Dumitru Gurenco", specialty: "Terapeut Protezist", image: "/doctor-4.jpg" },
       { name: "Natalia Lozova", specialty: "Ortodont", image: "/doctor-5.jpg" }
@@ -491,9 +516,9 @@ export const I18N: Record<Lang, HomeI18n> = {
     reviewsDescription: "Îmbarcați-vă într-o călătorie prin experiențe sincere - descoperiți laudele și mărturiile pacienților noștri stimabili, dezvăluind calitatea de neegalat a serviciilor noastre!",
     reviewsReadMore: "Citește mai mult >",
     reviewsItems: [
-      { text: "Clinica este excepțional de curată și prioritizează igiena. Respectă protocoale stricte de curățenie, ceea ce îmi oferă o siguranță suplimentară.", name: "Crysty Harly", role: "Manager de Produs", avatar: "https://i.pravatar.cc/150?u=1" },
-      { text: "Sunt extrem de mulțumită de profesionalismul medicilor. Tratamentul a fost complet nedureros, iar rezultatul a depășit așteptările mele.", name: "Selina Martin", role: "Director Artistic", avatar: "https://i.pravatar.cc/150?u=2" },
-      { text: "O clinică minunată! Personal amabil, echipament modern și prețuri transparente. Recomand cu încredere tuturor!", name: "Yacob Smith", role: "Analist", avatar: "https://i.pravatar.cc/150?u=3" }
+      { text: "Clinica este excepțional de curată, iar medicii sunt adevărați profesioniști. Tratamentul a fost complet nedureros!", name: "Elena Rusu", role: "Profesor", avatar: "https://i.pravatar.cc/150?u=12" },
+      { text: "Sunt extrem de mulțumită de profesionalismul medicilor. Tratamentul a fost complet nedureros, iar rezultatul a depășit așteptările mele.", name: "Vasile Cebotari", role: "Antreprenor", avatar: "https://i.pravatar.cc/150?u=13" },
+      { text: "O clinică minunată! Personal amabil, echipament modern și prețuri transparente. Recomand cu încredere tuturor!", name: "Ion Munteanu", role: "Inginer", avatar: "https://i.pravatar.cc/150?u=11" }
     ],
     insightsTitle: "Ultimele articole",
     insightsItems: [
@@ -510,7 +535,12 @@ export const I18N: Record<Lang, HomeI18n> = {
     footerCopyright: "Copyright © 2026 Amaterra. Toate drepturile rezervate.",
     footerLinksCol1: ["DESPRE NOI", "SERVICII"],
     footerLinksCol2: ["MEDICI", "LOCAȚIE"],
-    footerSocial: ["INSTAGRAM", "TWITTER", "FACEBOOK", "TIKTOK"]
+    footerSocial: ["INSTAGRAM", "FACEBOOK", "TIKTOK"],
+    footerSocialLinks: [
+      "https://www.instagram.com/amaterradental.md?igsh=dXkzY3VwbWVwNnlp",
+      "https://www.facebook.com/share/1CSTBNhNCY/",
+      "https://www.tiktok.com/@clinicaamaterra?_r=1&_t=ZS-96Kcns1SK8Y"
+    ]
   },
   en: {
     brand: "amaterra.md",
@@ -522,13 +552,21 @@ export const I18N: Record<Lang, HomeI18n> = {
     title: "Modern Dental Care, Stress-Free",
     description:
       "Gentle treatment, clear pricing, and fast appointments in one calm, friendly clinic.",
+    tagline2: "Your health is our priority.",
+    title2: "Professional Dentistry in Chisinau",
+    description2:
+      "Experienced doctors, modern equipment, and individual approach to every patient.",
+    tagline3: "Comfort and quality come first.",
+    title3: "Modern cabinets and equipment",
+    description3:
+      "Atmosphere of calm and confidence. Comfortable conditions and advanced technologies.",
     book: "Book Appointment",
     learn: "Learn More",
     languageLabel: "Language",
     aboutLabel: "(about us)",
-    aboutTitle: "A Simple Way to Save on Dental Care",
+    aboutTitle: "Quality and Care for Every Patient",
     aboutDescription:
-      "Our team of skilled and experienced dental professionals strives to create a comfortable and welcoming environment for each patient. We offer a wide range of services.",
+      "Our team of experienced dentists uses modern technology and an individual approach to make every visit comfortable and effective.",
     aboutCta: "Book Appointment",
     aboutSatisfaction: "98%",
     aboutSatisfactionLabel: "Client satisfaction with our service",
@@ -546,13 +584,13 @@ export const I18N: Record<Lang, HomeI18n> = {
         title: "Revitalized Cleaning",
         description:
           "Maintaining optimal oral health is essential for a radiant smile and overall well-being. Ultrasonic cleaning and Air Flow treatment.",
-        image: "/spec-2.webp",
+        image: "/airflow.webp",
       },
       {
         title: "Reinforced Fillings",
         description:
           "We prioritize the longevity and functionality of your smile. Our reinforced fillings from modern composites offer reliable restoration.",
-        image: "/spec-3.webp",
+        image: "/filingdental.webp",
       },
     ],
     findUsTitle: "Book Online\nNow",
@@ -734,9 +772,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctorsTitle: "Our Doctors",
     ourDoctorsSubtitle: "Team of professionals with years of experience",
     ourDoctorsBottomText: "Each doctor at our clinic regularly undergoes training and improves their qualifications to provide you with the best level of dental care",
+    workGalleryTitle: "Our Work",
+    workGallerySubtitle: "Examples of our dental work",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "General Practitioner", image: "/doctor-1.jpg" },
-      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/doctor-2.jpg" },
+      { name: "Ceban Ruslan", specialty: "General Practitioner", image: "/snapedit_1779977589291.jpeg" },
+      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/sorin robac.jpg" },
       { name: "Alexandra Ursu", specialty: "Therapist", image: "/doctor-3.jpg" },
       { name: "Dumitru Gurenco", specialty: "Therapist Prosthetist", image: "/doctor-4.jpg" },
       { name: "Natalia Lozova", specialty: "Orthodontist", image: "/doctor-5.jpg" }
@@ -745,9 +785,9 @@ export const I18N: Record<Lang, HomeI18n> = {
     reviewsDescription: "Embark on a Journey through Heartfelt Experiences - Unveil the Praises and Testimonials from Our Esteemed Clients, Unraveling the Unmatched Quality of Our Services!",
     reviewsReadMore: "Read More >",
     reviewsItems: [
-      { text: "The clinic is also exceptionally clean and prioritizes hygiene. They follow strict cleanliness protocols, which gives me added confidence that I am in a safe environment for dental care.", name: "Crysty Harly", role: "Product Manager", avatar: "https://i.pravatar.cc/150?u=1" },
-      { text: "I was very pleased with the professionalism of the doctors. The treatment was completely painless, and the result exceeded all my expectations.", name: "Selina Martin", role: "Art Director", avatar: "https://i.pravatar.cc/150?u=2" },
-      { text: "Wonderful clinic! Welcoming staff, modern equipment, and transparent pricing. I highly recommend it to everyone!", name: "Yacob Smith", role: "Data Analyst", avatar: "https://i.pravatar.cc/150?u=3" }
+      { text: "Clinica este excepțional de curată, iar medicii sunt adevărați profesioniști. Tratamentul a fost complet nedureros!", name: "Elena Rusu", role: "Teacher", avatar: "https://i.pravatar.cc/150?u=12" },
+      { text: "I was very pleased with the professionalism of the doctors. The treatment was completely painless, and the result exceeded all my expectations.", name: "Vasile Cebotari", role: "Entrepreneur", avatar: "https://i.pravatar.cc/150?u=13" },
+      { text: "Sunt extrem de mulțumit de profesionalismul medicilor. Tratamentul a fost la cel mai înalt nivel, iar rezultatul a depășit așteptările mele.", name: "Ion Munteanu", role: "Engineer", avatar: "https://i.pravatar.cc/150?u=11" }
     ],
     insightsTitle: "Latest Insights",
     insightsItems: [
@@ -764,6 +804,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     footerCopyright: "Copyright © 2026 Amaterra. All rights reserved.",
     footerLinksCol1: ["ABOUT US", "OUR SERVICES"],
     footerLinksCol2: ["DENTISTS", "LOCATION"],
-    footerSocial: ["INSTAGRAM", "TWITTER", "FACEBOOK", "TIKTOK"]
+    footerSocial: ["INSTAGRAM", "FACEBOOK", "TIKTOK"],
+    footerSocialLinks: [
+      "https://www.instagram.com/amaterradental.md?igsh=dXkzY3VwbWVwNnlp",
+      "https://www.facebook.com/share/1CSTBNhNCY/",
+      "https://www.tiktok.com/@clinicaamaterra?_r=1&_t=ZS-96Kcns1SK8Y"
+    ]
   },
 };

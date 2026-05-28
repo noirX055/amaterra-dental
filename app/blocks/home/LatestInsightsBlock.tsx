@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import type { HomeI18n } from "./types";
 import type { Lang } from "./types";
@@ -19,6 +19,9 @@ export function LatestInsightsBlock({ t, lang }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedPosts, setTranslatedPosts] = useState<Map<string, { title: string; excerpt: string }>>(new Map());
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function loadPosts() {
@@ -125,7 +128,7 @@ export function LatestInsightsBlock({ t, lang }: Props) {
   }
 
   const visibleItems = items.slice(currentIndex, currentIndex + 3);
-  const canGoNext = currentIndex + 3 < items.length;
+  const canGoNext = currentIndex + 1 < items.length;
   const canGoPrev = currentIndex > 0;
 
   const handleNext = () => {
@@ -141,36 +144,24 @@ export function LatestInsightsBlock({ t, lang }: Props) {
       data-reveal-on-scroll
       className="relative mx-auto mt-20 flex w-full max-w-7xl flex-col px-4 pt-12 pb-12 sm:px-6 lg:px-8 opacity-0 transition-opacity duration-700 translate-y-8 [&.is-visible]:opacity-100 [&.is-visible]:translate-y-0"
     >
-      <div className="flex items-center justify-between mb-10">
-        <h2 className="text-4xl font-semibold tracking-tighter text-zinc-900 sm:text-5xl">
-          {t.insightsTitle}
-        </h2>
+      <h2 className="text-4xl font-semibold tracking-tighter text-zinc-900 sm:text-5xl mb-10">
+        {t.insightsTitle}
+      </h2>
 
+      <div className="relative flex items-center gap-6">
         {items.length > 3 && (
-          <div className="flex gap-3">
-            <button
-              onClick={handlePrev}
-              disabled={!canGoPrev}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={!canGoNext}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
+          <button
+            onClick={handlePrev}
+            disabled={!canGoPrev}
+            className="hidden lg:flex absolute -left-16 top-1/2 -translate-y-1/2 h-14 w-14 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900 z-10"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
         )}
-      </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 flex-1">
         {isTranslating && (
           <div className="col-span-full flex items-center justify-center py-10">
             <div className="flex items-center gap-3">
@@ -244,16 +235,49 @@ export function LatestInsightsBlock({ t, lang }: Props) {
       </div>
 
       {items.length > 3 && (
+        <button
+          onClick={handleNext}
+          disabled={!canGoNext}
+          className="hidden lg:flex absolute -right-16 top-1/2 -translate-y-1/2 h-14 w-14 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900 z-10"
+        >
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+    </div>
+
+      {items.length > 3 && (
         <div className="mt-8 flex items-center justify-center gap-2">
-          {Array.from({ length: Math.ceil(items.length / 3) }).map((_, idx) => (
+          <button
+            onClick={handlePrev}
+            disabled={!canGoPrev}
+            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {Array.from({ length: items.length - 2 }).map((_, idx) => (
             <button
               key={idx}
-              onClick={() => setCurrentIndex(idx * 3)}
+              onClick={() => setCurrentIndex(idx)}
               className={`h-2 rounded-full transition-all duration-300 ${
-                Math.floor(currentIndex / 3) === idx ? "w-8 bg-zinc-900" : "w-2 bg-zinc-300 hover:bg-zinc-400"
+                currentIndex === idx ? "w-8 bg-zinc-900" : "w-2 bg-zinc-300 hover:bg-zinc-400"
               }`}
             />
           ))}
+
+          <button
+            onClick={handleNext}
+            disabled={!canGoNext}
+            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       )}
     </section>
