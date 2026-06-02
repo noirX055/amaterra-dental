@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Appointment } from "./adminTypes";
-import { formatDate, formatDateTime, statusStyles } from "./adminTypes";
+import { formatDate, formatDateTime, statusStyles, statusLabels } from "./adminTypes";
 import { useAdminAppointmentsLive } from "./useAdminAppointmentsLive";
 import { useAdminLang } from "./_components/admin-lang-context";
 
