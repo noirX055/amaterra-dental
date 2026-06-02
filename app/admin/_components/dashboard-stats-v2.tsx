@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { Appointment } from "../adminTypes";
+import { useAdminLang } from "./admin-lang-context";
 
 type StatCardProps = {
   title: string;
@@ -27,7 +28,7 @@ function StatCard({ title, count, percentage, trend, icon, color, bgColor }: Sta
             <span className={`font-semibold ${trendColor}`}>
               {trendIcon} {percentage}%
             </span>
-            <span className="text-gray-500 dark:text-gray-400">от общего</span>
+            <span className="text-gray-500 dark:text-gray-400">{title.includes(" ") ? "" : ""}</span>
           </div>
         </div>
         <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${bgColor} transition-transform group-hover:scale-110`}>
@@ -40,6 +41,7 @@ function StatCard({ title, count, percentage, trend, icon, color, bgColor }: Sta
 }
 
 export function DashboardStatsV2({ appointments }: { appointments: Appointment[] }) {
+  const { t } = useAdminLang();
   const stats = useMemo(() => {
     const total = appointments.length || 1;
     const pending = appointments.filter((a) => a.status === "pending").length;
@@ -49,7 +51,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
 
     const result: StatCardProps[] = [
       {
-        title: "Ожидает ответа",
+        title: t("dashboard.pending"),
         count: pending,
         percentage: Math.round((pending / total) * 100),
         trend: pending > confirmed ? "up" : "neutral",
@@ -62,7 +64,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         bgColor: "bg-amber-50",
       },
       {
-        title: "Подтверждено",
+        title: t("dashboard.confirmed"),
         count: confirmed,
         percentage: Math.round((confirmed / total) * 100),
         trend: "up",
@@ -75,7 +77,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         bgColor: "bg-emerald-50",
       },
       {
-        title: "Завершено",
+        title: t("dashboard.completed"),
         count: completed,
         percentage: Math.round((completed / total) * 100),
         trend: "up",
@@ -88,7 +90,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
         bgColor: "bg-blue-50",
       },
       {
-        title: "Отменено",
+        title: t("dashboard.cancelled"),
         count: cancelled,
         percentage: Math.round((cancelled / total) * 100),
         trend: cancelled > 0 ? "down" : "neutral",
@@ -102,7 +104,7 @@ export function DashboardStatsV2({ appointments }: { appointments: Appointment[]
       },
     ];
     return result;
-  }, [appointments]);
+  }, [appointments, t]);
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

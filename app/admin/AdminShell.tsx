@@ -6,6 +6,7 @@ import { useState, type ReactNode } from "react";
 import { NotificationBell } from "./_components/notification-bell";
 import { UserMenu } from "./_components/user-menu";
 import { ToastContainer } from "./_components/toast";
+import { useAdminLang } from "./_components/admin-lang-context";
 
 type AdminShellProps = {
   userEmail: string | undefined;
@@ -13,14 +14,14 @@ type AdminShellProps = {
 };
 
 type NavItem = {
-  label: string;
+  labelKey: string;
   href: string;
   icon: ReactNode;
 };
 
 const navItems: NavItem[] = [
   {
-    label: "Дашборд",
+    labelKey: "nav.dashboard",
     href: "/admin",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +30,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: "Календарь",
+    labelKey: "nav.calendar",
     href: "/admin/calendar",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -38,7 +39,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: "Записи",
+    labelKey: "nav.appointments",
     href: "/admin/appointments",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,7 +48,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: "Врачи",
+    labelKey: "nav.doctors",
     href: "/admin/doctors",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,7 +57,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: "Пациенты",
+    labelKey: "nav.patients",
     href: "/admin/patients",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,7 +66,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: "Блог",
+    labelKey: "nav.blog",
     href: "/admin/blog",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,7 +75,7 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    label: "Чат",
+    labelKey: "nav.chat",
     href: "/admin/chat",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,6 +89,7 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const pathname = usePathname();
+  const { lang, setLang, t } = useAdminLang();
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -126,7 +128,7 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               className="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 lg:block"
-              title={sidebarCollapsed ? "Развернуть" : "Свернуть"}
+              title={sidebarCollapsed ? t("sidebar.expand") : t("sidebar.collapse")}
             >
               <svg
                 className={`h-5 w-5 transition-transform ${sidebarCollapsed ? "rotate-180" : ""}`}
@@ -164,10 +166,10 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
                       ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400"
                       : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                   } ${sidebarCollapsed ? "justify-center" : ""}`}
-                  title={sidebarCollapsed ? item.label : undefined}
+                  title={sidebarCollapsed ? t(item.labelKey) : undefined}
                 >
                   {item.icon}
-                  {!sidebarCollapsed && <span>{item.label}</span>}
+                  {!sidebarCollapsed && <span>{t(item.labelKey)}</span>}
                 </Link>
               );
             })}
@@ -199,7 +201,7 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
 
             <div className="flex items-center gap-4">
               <div className="hidden text-sm text-gray-500 dark:text-gray-400 sm:block">
-                {new Date().toLocaleDateString("ru-RU", {
+                {new Date().toLocaleDateString(lang === "ro" ? "ro-RO" : "ru-RU", {
                   weekday: "long",
                   year: "numeric",
                   month: "long",
@@ -209,6 +211,32 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Language switcher */}
+              <div className="flex items-center overflow-hidden rounded-lg border border-gray-200 dark:border-gray-600">
+                <button
+                  type="button"
+                  onClick={() => setLang("ru")}
+                  className={`px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                    lang === "ru"
+                      ? "bg-emerald-500 text-white"
+                      : "bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  RU
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLang("ro")}
+                  className={`px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                    lang === "ro"
+                      ? "bg-emerald-500 text-white"
+                      : "bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  RO
+                </button>
+              </div>
+
               <NotificationBell />
               <UserMenu userEmail={userEmail} />
             </div>

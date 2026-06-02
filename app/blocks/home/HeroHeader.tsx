@@ -36,7 +36,7 @@ export function HeroHeader({
   };
 
   return (
-    <header className="hero-appear-soft hero-delay-1 relative flex items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-8">
+    <header className="hero-appear-soft hero-delay-1 relative z-50 flex items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-8">
       <a href="#" className="inline-flex h-10 flex-shrink-0 items-center overflow-visible sm:h-14">
         <Image
           src="/logo-large.webp"
@@ -50,7 +50,7 @@ export function HeroHeader({
 
       <nav className="hidden items-center gap-2 rounded-full border border-black/10 bg-white/70 px-2 py-1 text-sm font-medium text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-950/60 dark:text-zinc-200 md:flex md:ml-auto md:mr-4">
         {t.nav.map((label, index) => {
-          const sectionIds = ["#home", "#about", "#services", "#reviews", "#appointment"];
+          const sectionIds = ["#home", "#about", "#services", "#reviews", "#blog", "#appointment"];
           const href = sectionIds[index] || "#";
 
           return (
@@ -96,24 +96,27 @@ export function HeroHeader({
           </button>
 
           {isLangOpen && (
-            <div
-              ref={langMenuRef}
+            <>
+              <div
+                className="fixed inset-0 z-[9998] cursor-pointer"
+                onClick={() => setIsLangOpen(false)}
+              />
+              <div
+                ref={langMenuRef}
               className="absolute right-0 z-[9999] mt-2 w-40 overflow-hidden rounded-2xl border border-black/10 bg-white p-1 shadow-2xl"
               style={{ pointerEvents: 'auto' }}
             >
               {LANGS.map((code) => {
                 console.log("Rendering button for:", code);
                 return (
-                  <div
+                  <button
                     key={code}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log("Selected language (mousedown):", code);
+                    type="button"
+                    onClick={() => {
+                      console.log("Selected language (onClick):", code);
                       setLang(code);
                       setIsLangOpen(false);
                     }}
-                    style={{ pointerEvents: 'auto', cursor: 'pointer' }}
                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition-colors ${
                       code === lang
                         ? "bg-black/6 text-zinc-950"
@@ -122,10 +125,11 @@ export function HeroHeader({
                   >
                     <span className="uppercase">{code}</span>
                     {code === lang && <span className="opacity-80">✓</span>}
-                  </div>
+                  </button>
                 );
               })}
             </div>
+            </>
           )}
         </div>
 
@@ -164,7 +168,7 @@ export function HeroHeader({
         <>
           {/* Overlay with blur */}
           <div
-            className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-md md:hidden"
+            className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-md cursor-pointer md:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
@@ -172,7 +176,7 @@ export function HeroHeader({
           <div className="fixed left-0 right-0 top-[80px] z-[9999] px-4 md:hidden">
             <nav className="flex flex-col gap-1 rounded-2xl border border-black/10 bg-white p-2 shadow-2xl">
               {t.nav.map((label, index) => {
-                const sectionIds = ["#home", "#about", "#services", "#reviews", "#appointment"];
+                const sectionIds = ["#home", "#about", "#services", "#reviews", "#blog", "#appointment"];
                 const href = sectionIds[index] || "#";
 
                 return (

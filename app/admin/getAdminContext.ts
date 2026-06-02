@@ -24,7 +24,7 @@ export async function getAdminContext() {
   const { data: appointmentsData, error } = await adminSupabase
     .from("appointments")
     .select(
-      "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, admin_comment, lang, created_at"
+      "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, admin_comment, lang, doctor_id, patient_id, created_at, patient:patients(*)"
     )
     .order("created_at", { ascending: false });
 
@@ -36,7 +36,7 @@ export async function getAdminContext() {
     const { data: fallbackData, error: fallbackError } = await adminSupabase
       .from("appointments")
       .select(
-        "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, lang, created_at"
+        "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, lang, doctor_id, patient_id, created_at, patient:patients(*)"
       )
       .order("created_at", { ascending: false });
 
@@ -44,8 +44,9 @@ export async function getAdminContext() {
       throw new Error(fallbackError.message);
     }
 
-    const normalized = (fallbackData ?? []).map((item) => ({
+    const normalized = (fallbackData ?? []).map((item: any) => ({
       ...item,
+      patient: Array.isArray(item.patient) ? item.patient[0] : item.patient,
       admin_comment: null,
     }));
 
@@ -55,9 +56,14 @@ export async function getAdminContext() {
     };
   }
 
+  const formattedAppointments = (appointmentsData ?? []).map((item: any) => ({
+    ...item,
+    patient: Array.isArray(item.patient) ? item.patient[0] : item.patient,
+  }));
+
   return {
     userEmail: user.email,
-    appointments: (appointmentsData ?? []) as Appointment[],
+    appointments: formattedAppointments as Appointment[],
   };
 }
 

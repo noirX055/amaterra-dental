@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useAdminLang } from "./_components/admin-lang-context";
 
 import type { Appointment } from "./adminTypes";
 import { formatDate } from "./adminTypes";
@@ -13,10 +14,11 @@ type AdminDoctorsClientProps = {
 };
 
 const doctors = [
-  { id: "d1", name: "Анна Мороз", specialty: "Терапевт-стоматолог", avatar: "АМ", color: "from-blue-500 to-blue-600" },
-  { id: "d2", name: "Игорь Петреску", specialty: "Ортодонт", avatar: "ИП", color: "from-emerald-500 to-emerald-600" },
-  { id: "d3", name: "Марина Раду", specialty: "Хирург-имплантолог", avatar: "МР", color: "from-purple-500 to-purple-600" },
-  { id: "d4", name: "Виктор Савин", specialty: "Пародонтолог", avatar: "ВС", color: "from-amber-500 to-amber-600" },
+  { id: "d1", name: "Ceban Ruslan", specialty: "Медик-генералист", avatar: "CR", color: "from-blue-500 to-blue-600" },
+  { id: "d2", name: "Sorin Rabac", specialty: "Терапевт-протезист", avatar: "SR", color: "from-emerald-500 to-emerald-600" },
+  { id: "d3", name: "Alexandra Ursu", specialty: "Терапевт", avatar: "AU", color: "from-purple-500 to-purple-600" },
+  { id: "d4", name: "Dumitru Gurenco", specialty: "Терапевт-протезист", avatar: "DG", color: "from-amber-500 to-amber-600" },
+  { id: "d5", name: "Natalia Lozova", specialty: "Ортодонт", avatar: "NL", color: "from-rose-500 to-rose-600" },
 ];
 
 function getDoctorCases(completedAppointments: Appointment[]) {
@@ -32,6 +34,7 @@ export default function AdminDoctorsClient({
   const { appointments } = useAppointmentsRealtime(initialAppointments);
   const searchParams = useSearchParams();
   const doctorParam = searchParams.get("doctor");
+  const { t } = useAdminLang();
 
   const completedAppointments = useMemo(
     () => appointments.filter((appointment) => appointment.status === "completed"),
@@ -49,10 +52,10 @@ export default function AdminDoctorsClient({
     <>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Наши врачи
+          {t("doctors.title")}
         </h1>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Просмотр профилей врачей и истории завершённых случаев лечения пациентов
+          {t("doctors.subtitle")}
         </p>
       </div>
 
@@ -82,7 +85,7 @@ export default function AdminDoctorsClient({
                     {doctor.specialty}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-sm">
-                    <span className="text-gray-500 dark:text-gray-400">Завершено:</span>
+                    <span className="text-gray-500 dark:text-gray-400">{t("doctors.completed")}</span>
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {doctor.cases.length}
                     </span>
@@ -97,10 +100,10 @@ export default function AdminDoctorsClient({
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              История пациентов: {activeDoctor.name}
+              {t("doctors.patientHistory")} {activeDoctor.name}
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Завершенные случаи лечения
+              {t("doctors.completedCases")}
             </p>
           </div>
 
@@ -113,7 +116,7 @@ export default function AdminDoctorsClient({
                   </svg>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  У этого врача пока нет завершенных случаев
+                  {t("doctors.noCases")}
                 </p>
               </div>
             ) : (
@@ -147,7 +150,7 @@ export default function AdminDoctorsClient({
                         </div>
                         {appointment.notes && (
                           <div className="mt-3 rounded-lg bg-white p-3 text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                            <p className="font-medium text-gray-900 dark:text-white">Проблема:</p>
+                            <p className="font-medium text-gray-900 dark:text-white">{t("doctors.problem")}</p>
                             <p className="mt-1">{appointment.notes}</p>
                           </div>
                         )}

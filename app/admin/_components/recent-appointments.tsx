@@ -1,15 +1,17 @@
 "use client";
 
-import { Appointment, formatDateTime, statusLabels, statusStyles } from "../adminTypes";
+import { Appointment, statusLabels, statusStyles } from "../adminTypes";
+import { useAdminLang } from "./admin-lang-context";
 
 export function RecentAppointments({ appointments }: { appointments: Appointment[] }) {
+  const { lang, t } = useAdminLang();
   const recentAppointments = appointments.slice(0, 6);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
       <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Последние записи</h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Новые заявки пациентов</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t("dashboard.recentTitle")}</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t("dashboard.recentSubtitle")}</p>
       </div>
 
       <div className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -20,7 +22,7 @@ export function RecentAppointments({ appointments }: { appointments: Appointment
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Записей не найдено</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.noRecent")}</p>
           </div>
         ) : (
           recentAppointments.map((appointment) => (
@@ -45,7 +47,7 @@ export function RecentAppointments({ appointments }: { appointments: Appointment
                       </p>
                     </div>
                     <span className={`inline-flex shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}>
-                      {statusLabels[appointment.status]}
+                      {t(`status.${appointment.status}`)}
                     </span>
                   </div>
 
@@ -54,7 +56,7 @@ export function RecentAppointments({ appointments }: { appointments: Appointment
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <span>{new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "short" }).format(new Date(appointment.preferred_date))}</span>
+                      <span>{new Intl.DateTimeFormat(lang === "ru" ? "ru-RU" : "ro-RO", { day: "2-digit", month: "short" }).format(new Date(appointment.preferred_date))}</span>
                     </div>
                     {appointment.preferred_time && (
                       <div className="flex items-center gap-1.5">
@@ -84,7 +86,7 @@ export function RecentAppointments({ appointments }: { appointments: Appointment
             href="/admin/appointments"
             className="text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
           >
-            Посмотреть все записи →
+            {t("dashboard.viewAll")}
           </a>
         </div>
       )}

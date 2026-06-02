@@ -2,8 +2,10 @@
 
 import { useMemo } from "react";
 import { Appointment } from "../adminTypes";
+import { useAdminLang } from "./admin-lang-context";
 
 export function AppointmentsChart({ appointments }: { appointments: Appointment[] }) {
+  const { lang, t } = useAdminLang();
   const chartData = useMemo(() => {
     const last7Days = Array.from({ length: 7 }, (_, i) => {
       const date = new Date();
@@ -15,7 +17,7 @@ export function AppointmentsChart({ appointments }: { appointments: Appointment[
       const dayAppointments = appointments.filter((a) => a.created_at.startsWith(day));
       return {
         date: day,
-        label: new Intl.DateTimeFormat("ru-RU", { weekday: "short", day: "numeric" }).format(new Date(day)),
+        label: new Intl.DateTimeFormat(lang === "ru" ? "ru-RU" : "ro-RO", { weekday: "short", day: "numeric" }).format(new Date(day)),
         pending: dayAppointments.filter((a) => a.status === "pending").length,
         confirmed: dayAppointments.filter((a) => a.status === "confirmed").length,
         completed: dayAppointments.filter((a) => a.status === "completed").length,
@@ -27,27 +29,27 @@ export function AppointmentsChart({ appointments }: { appointments: Appointment[
     const maxValue = Math.max(...dataByDay.map((d) => d.total), 1);
 
     return { dataByDay, maxValue };
-  }, [appointments]);
+  }, [appointments, lang]);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Активность за неделю</h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Записи за последние 7 дней</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t("chart.title")}</h3>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t("chart.subtitle")}</p>
         </div>
         <div className="flex gap-4 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded-full bg-amber-500" />
-            <span className="text-gray-600 dark:text-gray-400">Ожидает</span>
+            <span className="text-gray-600 dark:text-gray-400">{t("status.pending")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded-full bg-emerald-500" />
-            <span className="text-gray-600 dark:text-gray-400">Подтверждено</span>
+            <span className="text-gray-600 dark:text-gray-400">{t("status.confirmed")}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded-full bg-blue-500" />
-            <span className="text-gray-600 dark:text-gray-400">Завершено</span>
+            <span className="text-gray-600 dark:text-gray-400">{t("status.completed")}</span>
           </div>
         </div>
       </div>
@@ -68,21 +70,21 @@ export function AppointmentsChart({ appointments }: { appointments: Appointment[
                       <div
                         className="w-full bg-blue-500 transition-all"
                         style={{ height: `${completedHeight}%` }}
-                        title={`Завершено: ${day.completed}`}
+                        title={`${t("status.completed")}: ${day.completed}`}
                       />
                     )}
                     {day.confirmed > 0 && (
                       <div
                         className="w-full bg-emerald-500 transition-all"
                         style={{ height: `${confirmedHeight}%` }}
-                        title={`Подтверждено: ${day.confirmed}`}
+                        title={`${t("status.confirmed")}: ${day.confirmed}`}
                       />
                     )}
                     {day.pending > 0 && (
                       <div
                         className="w-full bg-amber-500 transition-all"
                         style={{ height: `${pendingHeight}%` }}
-                        title={`Ожидает: ${day.pending}`}
+                        title={`${t("status.pending")}: ${day.pending}`}
                       />
                     )}
                   </div>

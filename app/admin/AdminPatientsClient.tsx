@@ -2,18 +2,20 @@
 
 import { useMemo, useState } from "react";
 import type { Appointment } from "./adminTypes";
-import { formatDate, formatDateTime, statusLabels, statusStyles } from "./adminTypes";
+import { formatDate, formatDateTime, statusStyles } from "./adminTypes";
 import { useAdminAppointmentsLive } from "./useAdminAppointmentsLive";
+import { useAdminLang } from "./_components/admin-lang-context";
 
 type AdminPatientsClientProps = {
   initialAppointments: Appointment[];
 };
 
 const doctors = [
-  { id: "d1", name: "Анна Мороз" },
-  { id: "d2", name: "Игорь Петреску" },
-  { id: "d3", name: "Марина Раду" },
-  { id: "d4", name: "Виктор Савин" },
+  { id: "d1", name: "Ceban Ruslan" },
+  { id: "d2", name: "Sorin Rabac" },
+  { id: "d3", name: "Alexandra Ursu" },
+  { id: "d4", name: "Dumitru Gurenco" },
+  { id: "d5", name: "Natalia Lozova" },
 ];
 
 function getDoctorName(doctorId: string | null) {
@@ -26,6 +28,7 @@ export default function AdminPatientsClient({
   initialAppointments,
 }: AdminPatientsClientProps) {
   const { appointments } = useAdminAppointmentsLive(initialAppointments);
+  const { t } = useAdminLang();
   const [expandedPatients, setExpandedPatients] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
   const patients = useMemo(() => {
@@ -43,16 +46,16 @@ export default function AdminPatientsClient({
     >();
 
     for (const appointment of appointments) {
-      const key = `${appointment.phone}|${appointment.first_name.toLowerCase()}|${appointment.last_name.toLowerCase()}`;
+      const key = appointment.patient_id || `${appointment.phone}|${appointment.first_name.toLowerCase()}|${appointment.last_name.toLowerCase()}`;
       const existing = groups.get(key);
 
       if (!existing) {
         groups.set(key, {
-          id: appointment.id,
-          first_name: appointment.first_name,
-          last_name: appointment.last_name,
-          phone: appointment.phone,
-          email: appointment.email,
+          id: appointment.patient_id || appointment.id,
+          first_name: appointment.patient?.first_name || appointment.first_name,
+          last_name: appointment.patient?.last_name || appointment.last_name,
+          phone: appointment.patient?.phone || appointment.phone,
+          email: appointment.patient?.email || appointment.email,
           lang: appointment.lang,
           appointments: [appointment],
         });
@@ -88,12 +91,12 @@ export default function AdminPatientsClient({
     <div className="min-h-screen text-slate-100">
       <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
         <header className="border-b border-slate-800/80 pb-6">
-          <p className="text-sm font-medium text-emerald-400">База пациентов</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            Пациенты клиники
+          <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{t("patients.database")}</p>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+            {t("patients.title")}
           </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            Карточки пациентов с завершёнными приёмами, история обращений и контактная информация
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-500 dark:text-gray-400">
+            {t("patients.description")}
           </p>
         </header>
 
@@ -114,7 +117,7 @@ export default function AdminPatientsClient({
                 type="text"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Поиск: имя, фамилия, телефон или email"
+                placeholder={t("patients.search")}
                 className="h-11 w-full rounded-xl border border-slate-700 bg-slate-950/60 pl-11 pr-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
               />
             </label>
@@ -124,25 +127,25 @@ export default function AdminPatientsClient({
               onClick={() => setQuery("")}
               className="h-11 rounded-xl border border-slate-700 bg-slate-800 px-4 text-sm font-medium text-slate-200 transition hover:bg-slate-700"
             >
-              Сбросить
+              {t("common.reset")}
             </button>
           </div>
 
           <p className="mt-3 text-sm text-slate-300">
-            Найдено пациентов: <span className="font-semibold text-white">{filteredPatients.length}</span>
+            {t("patients.found")}: <span className="font-semibold text-white">{filteredPatients.length}</span>
           </p>
         </section>
 
         {filteredPatients.length === 0 ? (
-          <div className="py-16 text-center text-sm text-slate-400">Пока нет завершенных записей пациентов.</div>
+          <div className="py-16 text-center text-sm text-slate-400">{t("patients.empty")}</div>
         ) : (
           <div className="mt-6 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/40">
             <div className="hidden grid-cols-[2fr_1.5fr_1fr_1fr_auto] gap-4 border-b border-slate-700 px-4 py-3 text-xs uppercase tracking-[0.12em] text-slate-500 md:grid">
-              <p>Пациент</p>
-              <p>Контакт</p>
-              <p>Последний визит</p>
-              <p>История</p>
-              <p className="text-right">Действия</p>
+              <p>{t("patients.name")}</p>
+              <p>{t("patients.contact")}</p>
+              <p>{t("patients.lastVisit")}</p>
+              <p>{t("patients.history")}</p>
+              <p className="text-right">{t("patients.actions")}</p>
             </div>
             {filteredPatients.map((patient) => {
               const isExpanded = expandedPatients[patient.id] === true;
@@ -159,10 +162,10 @@ export default function AdminPatientsClient({
                     <p className="font-semibold text-white">
                       {patient.first_name} {patient.last_name}
                     </p>
-                    <p className="text-xs uppercase text-slate-400">Язык: {patient.lang}</p>
+                    <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{t("patients.lang")}: {patient.lang}</p>
                   </div>
                   <p className="text-sm text-slate-300">
-                    {patient.email ?? "Email не указан"} - {patient.phone}
+                    {patient.email ?? t("patients.noEmail")} - {patient.phone}
                   </p>
                   <p className="text-sm text-slate-200">{formatDate(patient.appointments[0].preferred_date)}</p>
                   <p className="text-sm text-slate-200">{patient.appointments.length}</p>
@@ -177,7 +180,7 @@ export default function AdminPatientsClient({
                       }
                       className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-950/70 px-3 py-2 text-xs font-medium text-slate-200 transition hover:bg-slate-900"
                     >
-                      {isExpanded ? "Скрыть" : "Подробнее"}
+                      {isExpanded ? t("common.hide") : t("common.details")}
                       <svg
                         viewBox="0 0 24 24"
                         fill="none"
@@ -209,10 +212,10 @@ export default function AdminPatientsClient({
                       }`}
                     >
                     <p className="mb-3 text-xs uppercase tracking-[0.12em] text-slate-500">
-                      История обращений / доп. информация
+                      {t("patients.historyDetails")}
                     </p>
                     <p className="mb-3 text-sm text-slate-300">
-                      Лечащий врач:{" "}
+                      {t("patients.doctor")}:{" "}
                       <span className="font-semibold text-white">{getDoctorName(patient.appointments[0].doctor_id)}</span>
                     </p>
                     <div className="grid gap-3">
@@ -220,8 +223,12 @@ export default function AdminPatientsClient({
                         <div key={historyItem.id} className="rounded-xl border border-slate-700/80 bg-slate-900/60 p-3">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <p className="text-sm font-medium text-slate-100">
-                              {formatDate(historyItem.preferred_date)}{" "}
-                              {historyItem.preferred_time ? `- ${historyItem.preferred_time}` : ""}
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {formatDate(historyItem.preferred_date)}
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  {t("appointments.time")}: {historyItem.preferred_time ?? t("appointments.notSpecified")}
+                                </p>
                             </p>
                             <span
                               className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[historyItem.status]}`}
@@ -230,14 +237,14 @@ export default function AdminPatientsClient({
                             </span>
                           </div>
                           <p className="mt-2 text-xs text-slate-500">
-                            Создано: {formatDateTime(historyItem.created_at)}
+                            {t("appointments.created")}: {formatDateTime(historyItem.created_at)}
                           </p>
                           <p className="mt-2 text-sm text-slate-300">
-                            {historyItem.notes ?? "Проблема не была указана в записи."}
+                            {historyItem.notes ?? t("appointments.noNotes")}
                           </p>
                           {historyItem.admin_comment ? (
                             <p className="mt-2 text-sm text-slate-400">
-                              Комментарий администратора: {historyItem.admin_comment}
+                              {t("appointments.adminComment")}: {historyItem.admin_comment}
                             </p>
                           ) : null}
                         </div>

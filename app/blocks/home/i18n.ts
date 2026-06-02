@@ -6,7 +6,7 @@ export const LANG_STORAGE_KEY = "amaterra.lang";
 export const I18N: Record<Lang, HomeI18n> = {
   ru: {
     brand: "amaterra.md",
-    nav: ["Главная", "О нас", "Услуги", "Отзывы", "Запись"],
+    nav: ["Главная", "О нас", "Услуги", "Отзывы", "Блог", "Запись"],
     callNow: "Позвонить",
     phoneNumberDisplay: "+373 685 55 585",
     phoneTel: "+37368555585",
@@ -237,11 +237,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     workGalleryTitle: "Наши работы",
     workGallerySubtitle: "Примеры наших стоматологических работ",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "Медик-генералист", image: "/snapedit_1779977589291.jpeg" },
-      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/sorin robac.jpg" },
+      { name: "Ceban Ruslan", specialty: "Медик-генералист", image: "/ruslan-ceban.webp" },
+      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/sorin-robac.webp" },
       { name: "Alexandra Ursu", specialty: "Терапевт", image: "/doctor-3.jpg" },
       { name: "Dumitru Gurenco", specialty: "Терапевт-протезист", image: "/doctor-4.jpg" },
-      { name: "Natalia Lozova", specialty: "Ортодонт", image: "/doctor-5.jpg" }
+      { name: "Natalia Lozova", specialty: "Ортодонт", image: "/natalialozov.webp" }
     ],
     reviewsTitle: "Что говорят наши клиенты:",
     reviewsDescription: "Откройте для себя искренние отзывы наших благодарных пациентов и убедитесь в непревзойденном качестве наших стоматологических услуг!",
@@ -275,7 +275,7 @@ export const I18N: Record<Lang, HomeI18n> = {
   },
   ro: {
     brand: "amaterra.md",
-    nav: ["Acasă", "Despre", "Servicii", "Recenzii", "Programare"],
+    nav: ["Acasă", "Despre", "Servicii", "Recenzii", "Blog", "Programare"],
     callNow: "Sună acum",
     phoneNumberDisplay: "+373 685 55 585",
     phoneTel: "+37368555585",
@@ -506,11 +506,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     workGalleryTitle: "Lucrările noastre",
     workGallerySubtitle: "Exemple ale lucrărilor noastre stomatologice",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "Medic Generalist", image: "/snapedit_1779977589291.jpeg" },
-      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/sorin robac.jpg" },
+      { name: "Ceban Ruslan", specialty: "Medic Generalist", image: "/ruslan-ceban.webp" },
+      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/sorin-robac.webp" },
       { name: "Alexandra Ursu", specialty: "Terapeut", image: "/doctor-3.jpg" },
       { name: "Dumitru Gurenco", specialty: "Terapeut Protezist", image: "/doctor-4.jpg" },
-      { name: "Natalia Lozova", specialty: "Ortodont", image: "/doctor-5.jpg" }
+      { name: "Natalia Lozova", specialty: "Ortodont", image: "/natalialozov.webp" }
     ],
     reviewsTitle: "Vedeți ce spun clienții noștri:",
     reviewsDescription: "Îmbarcați-vă într-o călătorie prin experiențe sincere - descoperiți laudele și mărturiile pacienților noștri stimabili, dezvăluind calitatea de neegalat a serviciilor noastre!",
@@ -544,7 +544,7 @@ export const I18N: Record<Lang, HomeI18n> = {
   },
   en: {
     brand: "amaterra.md",
-    nav: ["Home", "About", "Services", "Reviews", "Appointment"],
+    nav: ["Home", "About", "Services", "Reviews", "Blog", "Appointment"],
     callNow: "Call Now",
     phoneNumberDisplay: "+373 685 55 585",
     phoneTel: "+37368555585",
@@ -775,11 +775,11 @@ export const I18N: Record<Lang, HomeI18n> = {
     workGalleryTitle: "Our Work",
     workGallerySubtitle: "Examples of our dental work",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "General Practitioner", image: "/snapedit_1779977589291.jpeg" },
-      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/sorin robac.jpg" },
+      { name: "Ceban Ruslan", specialty: "General Practitioner", image: "/ruslan-ceban.webp" },
+      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/sorin-robac.webp" },
       { name: "Alexandra Ursu", specialty: "Therapist", image: "/doctor-3.jpg" },
       { name: "Dumitru Gurenco", specialty: "Therapist Prosthetist", image: "/doctor-4.jpg" },
-      { name: "Natalia Lozova", specialty: "Orthodontist", image: "/doctor-5.jpg" }
+      { name: "Natalia Lozova", specialty: "Orthodontist", image: "/natalialozov.webp" }
     ],
     reviewsTitle: "See What Our Clients Have to Say:",
     reviewsDescription: "Embark on a Journey through Heartfelt Experiences - Unveil the Praises and Testimonials from Our Esteemed Clients, Unraveling the Unmatched Quality of Our Services!",

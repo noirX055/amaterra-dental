@@ -22,7 +22,7 @@ export async function GET() {
   const { data, error } = await adminSupabase
     .from("appointments")
     .select(
-      "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, admin_comment, lang, created_at"
+      "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, admin_comment, lang, doctor_id, patient_id, created_at, patient:patients(*)"
     )
     .order("created_at", { ascending: false });
 
@@ -34,7 +34,7 @@ export async function GET() {
     const { data: fallbackData, error: fallbackError } = await adminSupabase
       .from("appointments")
       .select(
-        "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, lang, created_at"
+        "id, first_name, last_name, phone, email, preferred_date, preferred_time, status, notes, lang, doctor_id, patient_id, created_at, patient:patients(*)"
       )
       .order("created_at", { ascending: false });
 
@@ -42,15 +42,21 @@ export async function GET() {
       return NextResponse.json({ error: fallbackError.message }, { status: 500 });
     }
 
-    const normalized = (fallbackData ?? []).map((item) => ({
+    const normalized = (fallbackData ?? []).map((item: any) => ({
       ...item,
+      patient: Array.isArray(item.patient) ? item.patient[0] : item.patient,
       admin_comment: null,
     }));
 
     return NextResponse.json({ appointments: normalized });
   }
 
-  return NextResponse.json({ appointments: data ?? [] });
+  const formattedAppointments = (data ?? []).map((item: any) => ({
+    ...item,
+    patient: Array.isArray(item.patient) ? item.patient[0] : item.patient,
+  }));
+
+  return NextResponse.json({ appointments: formattedAppointments });
 }
 
 const ALLOWED_STATUSES = ["pending", "confirmed", "cancelled", "completed"] as const;

@@ -22,7 +22,7 @@ export function ReviewsBlock({ t }: Props) {
 
       <hr className="my-10 lg:my-14 border-zinc-200" />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 sm:-mx-6 sm:px-6 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {t.reviewsItems.map((item, index) => {
           const bgColors = [
             "bg-[#F2F8FD]", // light blue
@@ -34,7 +34,7 @@ export function ReviewsBlock({ t }: Props) {
           return (
             <div
               key={index}
-              className={`flex flex-col gap-6 rounded-[28px] p-8 lg:p-10 transition-transform duration-300 hover:-translate-y-1 ${bgColor}`}
+              className={`flex w-[85vw] max-w-[350px] shrink-0 snap-center flex-col gap-6 rounded-[28px] p-8 lg:p-10 transition-transform duration-300 hover:-translate-y-1 md:w-auto md:max-w-none ${bgColor}`}
             >
               <div className="text-7xl font-serif leading-none text-black/10 -mb-6 mt-[-10px]">
                 “

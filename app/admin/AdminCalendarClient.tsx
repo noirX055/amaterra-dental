@@ -2,14 +2,17 @@
 
 import { useMemo, useState } from "react";
 import type { Appointment } from "./adminTypes";
-import { statusLabels, statusStyles } from "./adminTypes";
 import { useAppointmentsRealtime } from "./_components/use-appointments-realtime";
+import { useAdminLang } from "./_components/admin-lang-context";
 
 type AdminCalendarClientProps = {
   initialAppointments: Appointment[];
 };
 
-const WEEK_DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const WEEK_DAYS = {
+  ru: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+  ro: ["Lu", "Ma", "Mi", "Jo", "Vi", "Sâ", "Du"],
+};
 
 function toDateOnly(value: Date) {
   return new Date(value.getFullYear(), value.getMonth(), value.getDate());
@@ -21,15 +24,15 @@ function formatDateKey(value: Date) {
   ).padStart(2, "0")}`;
 }
 
-function formatMonthLabel(value: Date) {
-  return value.toLocaleDateString("ru-RU", {
+function formatMonthLabel(value: Date, lang: "ru" | "ro") {
+  return value.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
     month: "long",
     year: "numeric",
   });
 }
 
-function formatTime(value: string | null) {
-  if (!value) return "Время не указано";
+function formatTime(value: string | null, emptyStr: string) {
+  if (!value) return emptyStr;
   return value.slice(0, 5);
 }
 
@@ -50,6 +53,7 @@ export default function AdminCalendarClient({
   initialAppointments,
 }: AdminCalendarClientProps) {
   const { appointments } = useAppointmentsRealtime(initialAppointments);
+  const { t, lang } = useAdminLang();
   const today = toDateOnly(new Date());
 
   const [visibleMonth, setVisibleMonth] = useState(
@@ -71,7 +75,7 @@ export default function AdminCalendarClient({
   const selectedDateKey = formatDateKey(selectedDate);
   const selectedDateAppointments = useMemo(() => {
     const list = appointmentsByDate[selectedDateKey] ?? [];
-    return [...list].sort((a, b) => formatTime(a.preferred_time).localeCompare(formatTime(b.preferred_time)));
+    return [...list].sort((a, b) => formatTime(a.preferred_time, "").localeCompare(formatTime(b.preferred_time, "")));
   }, [appointmentsByDate, selectedDateKey]);
 
   const monthTotal = useMemo(() => {
@@ -100,14 +104,14 @@ export default function AdminCalendarClient({
       <div className="mb-8 flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Календарь
+            {t("nav.calendar")}
           </h1>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Визуальный календарь всех записей. Выберите дату для просмотра деталей приёмов
+            {t("actions.calendarDesc")}
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-700 dark:bg-gray-800">
-          <span className="text-sm text-gray-600 dark:text-gray-400">Записей в месяце:</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Total:</span>
           <span className="text-lg font-bold text-gray-900 dark:text-white">{monthTotal}</span>
         </div>
       </div>
@@ -118,7 +122,7 @@ export default function AdminCalendarClient({
           {/* Calendar Header */}
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-semibold capitalize text-gray-900 dark:text-white">
-              {formatMonthLabel(visibleMonth)}
+              {formatMonthLabel(visibleMonth, lang)}
             </h2>
             <div className="flex items-center gap-2">
               <button
@@ -126,7 +130,7 @@ export default function AdminCalendarClient({
                 onClick={goToToday}
                 className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
               >
-                Сегодня
+                {t("stats.today")}
               </button>
               <button
                 type="button"
@@ -151,9 +155,8 @@ export default function AdminCalendarClient({
             </div>
           </div>
 
-          {/* Week Days */}
           <div className="mb-2 grid grid-cols-7 gap-2">
-            {WEEK_DAYS.map((day) => (
+            {WEEK_DAYS[lang].map((day) => (
               <div
                 key={day}
                 className="py-2 text-center text-xs font-semibold text-gray-500 dark:text-gray-400"
@@ -230,14 +233,14 @@ export default function AdminCalendarClient({
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
             <h3 className="font-semibold text-gray-900 dark:text-white">
-              {selectedDate.toLocaleDateString("ru-RU", {
+              {selectedDate.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {selectedDateAppointments.length} {selectedDateAppointments.length === 1 ? "запись" : "записей"}
+              {selectedDateAppointments.length}
             </p>
           </div>
 
@@ -250,7 +253,7 @@ export default function AdminCalendarClient({
                   </svg>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Нет записей на эту дату
+                  {t("dashboard.noRecent")}
                 </p>
               </div>
             ) : (
@@ -275,15 +278,15 @@ export default function AdminCalendarClient({
                               {appointment.phone}
                             </p>
                           </div>
-                          <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}>
-                            {statusLabels[appointment.status]}
+                          <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold`}>
+                            {t(`status.${appointment.status}`)}
                           </span>
                         </div>
                         <div className="mt-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          {formatTime(appointment.preferred_time)}
+                          {formatTime(appointment.preferred_time, t("appointments.notSpecified"))}
                         </div>
                       </div>
                     </div>

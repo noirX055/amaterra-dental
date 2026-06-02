@@ -13,6 +13,7 @@ type AppointmentPayload = {
   notes?: string;
   lang?: "ru" | "ro" | "en";
   doctor?: string;
+  patientId?: string;
 };
 
 export async function POST(request: Request) {
@@ -37,6 +38,40 @@ export async function POST(request: Request) {
     }
 
     const adminSupabase = createAdminClient();
+
+    // 1. Determine patient_id
+    let patientId = body.patientId || null;
+
+    if (!patientId) {
+      // Try to find existing patient by phone
+      const { data: existingPatient } = await adminSupabase
+        .from("patients")
+        .select("id")
+        .eq("phone", phone)
+        .single();
+
+      if (existingPatient) {
+        patientId = existingPatient.id;
+      } else {
+        // Create new patient if not found
+        const { data: newPatient, error: patientError } = await adminSupabase
+          .from("patients")
+          .insert({
+            first_name: firstName,
+            last_name: lastName,
+            phone,
+            email,
+          })
+          .select("id")
+          .single();
+
+        if (!patientError && newPatient) {
+          patientId = newPatient.id;
+        }
+      }
+    }
+
+    // 3. Create appointment with patient_id
     const { error } = await adminSupabase.from("appointments").insert({
       first_name: firstName,
       last_name: lastName,
@@ -47,6 +82,7 @@ export async function POST(request: Request) {
       notes,
       lang,
       doctor_id: doctor,
+      patient_id: patientId,
       status: "pending",
     });
 

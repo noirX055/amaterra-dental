@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import { Appointment } from "../adminTypes";
 import { CreateAppointmentModal } from "./create-appointment-modal";
+import { useAdminLang } from "./admin-lang-context";
 
 export function QuickActions({ appointments }: { appointments: Appointment[] }) {
+  const { t } = useAdminLang();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const stats = useMemo(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -21,8 +23,8 @@ export function QuickActions({ appointments }: { appointments: Appointment[] }) 
 
   const actions = [
     {
-      title: "Новая запись",
-      description: "Создать запись вручную",
+      title: t("actions.newAppointment"),
+      description: t("actions.newAppointmentDesc"),
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -32,8 +34,8 @@ export function QuickActions({ appointments }: { appointments: Appointment[] }) 
       onClick: () => setIsModalOpen(true),
     },
     {
-      title: "Календарь",
-      description: "Просмотр расписания",
+      title: t("nav.calendar"),
+      description: t("actions.calendarDesc"),
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -41,11 +43,11 @@ export function QuickActions({ appointments }: { appointments: Appointment[] }) 
       ),
       color: "bg-emerald-500 hover:bg-emerald-600",
       href: "/admin/calendar",
-      badge: stats.todayCount > 0 ? `${stats.todayCount} сегодня` : undefined,
+      badge: stats.todayCount > 0 ? `${stats.todayCount} ${t("stats.today").toLowerCase()}` : undefined,
     },
     {
-      title: "Ожидают ответа",
-      description: "Обработать заявки",
+      title: t("dashboard.pending"),
+      description: t("actions.pendingDesc"),
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -56,8 +58,8 @@ export function QuickActions({ appointments }: { appointments: Appointment[] }) 
       badge: stats.pendingCount > 0 ? `${stats.pendingCount}` : undefined,
     },
     {
-      title: "Подтверждённые",
-      description: "Смена статуса",
+      title: t("dashboard.confirmed"),
+      description: t("actions.confirmedDesc"),
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -68,8 +70,8 @@ export function QuickActions({ appointments }: { appointments: Appointment[] }) 
       badge: stats.confirmedCount > 0 ? `${stats.confirmedCount}` : undefined,
     },
     {
-      title: "Пациенты",
-      description: "База пациентов",
+      title: t("nav.patients"),
+      description: t("patients.database"),
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -83,8 +85,8 @@ export function QuickActions({ appointments }: { appointments: Appointment[] }) 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Быстрые действия</h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Часто используемые функции</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t("actions.title")}</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t("actions.subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">

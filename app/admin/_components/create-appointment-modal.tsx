@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { showToast } from "./toast";
+import type { Patient } from "../adminTypes";
+import { useAdminLang } from "./admin-lang-context";
 
 type CreateAppointmentModalProps = {
   isOpen: boolean;
@@ -15,6 +17,79 @@ export function CreateAppointmentModal({
   onSuccess,
 }: CreateAppointmentModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Patient[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const searchTimeoutRef = useRef<number | null>(null);
+  const { t } = useAdminLang();
+
+  // Form states
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setSearchQuery("");
+      setSearchResults([]);
+      setSelectedPatient(null);
+      setFirstName("");
+      setLastName("");
+      setPhone("");
+      setEmail("");
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    if (searchTimeoutRef.current) {
+      window.clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = window.setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/admin/patients/search?q=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data.patients || []);
+        }
+      } catch (err) {
+        console.error("Failed to search patients:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => {
+      if (searchTimeoutRef.current) window.clearTimeout(searchTimeoutRef.current);
+    };
+  }, [searchQuery]);
+
+  function handleSelectPatient(patient: Patient) {
+    setSelectedPatient(patient);
+    setFirstName(patient.first_name);
+    setLastName(patient.last_name);
+    setPhone(patient.phone);
+    setEmail(patient.email || "");
+    setSearchQuery("");
+    setSearchResults([]);
+  }
+
+  function handleClearPatient() {
+    setSelectedPatient(null);
+    setFirstName("");
+    setLastName("");
+    setPhone("");
+    setEmail("");
+  }
 
   if (!isOpen) return null;
 
@@ -24,14 +99,15 @@ export function CreateAppointmentModal({
 
     const formData = new FormData(event.currentTarget);
     const payload = {
-      firstName: String(formData.get("firstName") ?? ""),
-      lastName: String(formData.get("lastName") ?? ""),
-      phone: String(formData.get("phone") ?? ""),
-      email: String(formData.get("email") ?? ""),
+      firstName: selectedPatient ? selectedPatient.first_name : firstName,
+      lastName: selectedPatient ? selectedPatient.last_name : lastName,
+      phone: selectedPatient ? selectedPatient.phone : phone,
+      email: selectedPatient ? selectedPatient.email : email,
       preferredDate: String(formData.get("preferredDate") ?? ""),
       preferredTime: String(formData.get("preferredTime") ?? ""),
       notes: String(formData.get("notes") ?? ""),
       doctor: String(formData.get("doctor") ?? ""),
+      patientId: selectedPatient?.id || undefined,
       lang: "ru",
     };
 
@@ -44,14 +120,14 @@ export function CreateAppointmentModal({
 
       if (!response.ok) {
         const errorData = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(errorData?.error ?? "Не удалось создать запись");
+        throw new Error(errorData?.error ?? t("modal.error"));
       }
 
-      showToast("Запись успешно создана", "success");
+      showToast(t("modal.success"), "success");
       onSuccess();
       onClose();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Не удалось создать запись";
+      const message = error instanceof Error ? error.message : t("modal.error");
       showToast(message, "error");
     } finally {
       setIsSubmitting(false);
@@ -60,11 +136,11 @@ export function CreateAppointmentModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800">
-        <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+      <div className="flex w-full max-w-2xl flex-col max-h-[90vh] rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800">
+        <div className="shrink-0 border-b border-gray-200 px-6 py-4 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Создать запись
+              {t("modal.createTitle")}
             </h2>
             <button
               type="button"
@@ -78,30 +154,112 @@ export function CreateAppointmentModal({
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="grid gap-4">
-            <div className="grid gap-4 sm:grid-cols-2">
+        <div className="overflow-y-auto p-6">
+          <div className="pb-2">
+            {/* Patient Search Section */}
+          {!selectedPatient && (
+            <div className="relative mb-6">
               <label className="grid gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Имя <span className="text-red-500">*</span>
+                <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  {t("modal.searchPatient")}
                 </span>
                 <input
                   type="text"
-                  name="firstName"
-                  required
-                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t("modal.searchPlaceholder")}
+                  className="h-11 rounded-lg border border-gray-300 bg-gray-50 px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-900/50 dark:text-white"
+                />
+              </label>
+
+              {searchQuery.length >= 2 && (
+                <div className="absolute left-0 right-0 top-[70px] z-10 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                  {isSearching ? (
+                    <div className="p-3 text-sm text-gray-500 text-center">{t("modal.searching")}</div>
+                  ) : searchResults.length > 0 ? (
+                    <ul className="max-h-60 overflow-y-auto">
+                      {searchResults.map((patient) => (
+                        <li key={patient.id}>
+                          <button
+                            type="button"
+                            onClick={() => handleSelectPatient(patient)}
+                            className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition border-b border-gray-100 dark:border-gray-700 last:border-0"
+                          >
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {patient.first_name} {patient.last_name}
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {patient.phone} {patient.email ? `• ${patient.email}` : ""}
+                            </p>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="p-3 text-sm text-gray-500 text-center">
+                      {t("modal.notFound")}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          </div>
+
+          {selectedPatient && (
+            <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50/50 p-4 dark:border-emerald-900/50 dark:bg-emerald-900/10 flex justify-between items-center">
+              <div>
+                <p className="text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-semibold mb-1">
+                  {t("modal.selectedPatient")}
+                </p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {selectedPatient.first_name} {selectedPatient.last_name}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {selectedPatient.phone}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleClearPatient}
+                className="text-sm text-emerald-600 hover:text-emerald-700 font-medium underline"
+              >
+                {t("modal.clearPatient")}
+              </button>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="pt-4">
+            <div className="grid gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="grid gap-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t("modal.firstName")} {!selectedPatient && <span className="text-red-500">*</span>}
+                </span>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  disabled={!!selectedPatient}
+                  required={!selectedPatient}
+                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
                 />
               </label>
 
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Фамилия <span className="text-red-500">*</span>
+                  {t("modal.lastName")} {!selectedPatient && <span className="text-red-500">*</span>}
                 </span>
                 <input
                   type="text"
-                  name="lastName"
-                  required
-                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  disabled={!!selectedPatient}
+                  required={!selectedPatient}
+                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
                 />
               </label>
             </div>
@@ -109,32 +267,38 @@ export function CreateAppointmentModal({
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Телефон <span className="text-red-500">*</span>
+                  {t("modal.phone")} {!selectedPatient && <span className="text-red-500">*</span>}
                 </span>
                 <input
                   type="tel"
-                  name="phone"
-                  required
-                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  disabled={!!selectedPatient}
+                  required={!selectedPatient}
+                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
                 />
               </label>
 
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email
+                  {t("modal.email")}
                 </span>
                 <input
                   type="email"
-                  name="email"
-                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={!!selectedPatient}
+                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
                 />
               </label>
             </div>
 
+            <hr className="my-2 border-gray-200 dark:border-gray-700" />
+
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Дата визита <span className="text-red-500">*</span>
+                  {t("modal.visitDate")} <span className="text-red-500">*</span>
                 </span>
                 <input
                   type="date"
@@ -146,7 +310,7 @@ export function CreateAppointmentModal({
 
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Время визита
+                  {t("modal.visitTime")}
                 </span>
                 <input
                   type="time"
@@ -158,29 +322,30 @@ export function CreateAppointmentModal({
 
             <label className="grid gap-2">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Лечащий врач <span className="text-red-500">*</span>
+                {t("modal.doctor")} <span className="text-red-500">*</span>
               </span>
               <select
                 name="doctor"
                 required
                 className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
-                <option value="">Выберите врача</option>
-                <option value="d1">Анна Мороз - Терапевт-стоматолог</option>
-                <option value="d2">Игорь Петреску - Ортодонт</option>
-                <option value="d3">Марина Раду - Хирург-имплантолог</option>
-                <option value="d4">Виктор Савин - Пародонтолог</option>
+                <option value="">{t("modal.selectDoctor")}</option>
+                <option value="d1">Ceban Ruslan - Медик-генералист</option>
+                <option value="d2">Sorin Rabac - Терапевт-протезист</option>
+                <option value="d3">Alexandra Ursu - Терапевт</option>
+                <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>
+                <option value="d5">Natalia Lozova - Ортодонт</option>
               </select>
             </label>
 
             <label className="grid gap-2">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Примечания
+                {t("modal.notes")}
               </span>
               <textarea
                 name="notes"
                 rows={4}
-                placeholder="Опишите проблему или причину визита"
+                placeholder={t("modal.notesPlaceholder")}
                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500"
               />
             </label>
@@ -193,17 +358,18 @@ export function CreateAppointmentModal({
               disabled={isSubmitting}
               className="h-10 rounded-lg border border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
             >
-              Отмена
+              {t("modal.cancel")}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
               className="h-10 rounded-lg bg-emerald-500 px-4 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Создание..." : "Создать запись"}
+              {isSubmitting ? t("modal.submitting") : t("modal.submit")}
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

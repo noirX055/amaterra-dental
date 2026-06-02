@@ -10,6 +10,7 @@ import {
   statusStyles,
 } from "./adminTypes";
 import { useAdminAppointmentsLive } from "./useAdminAppointmentsLive";
+import { useAdminLang } from "./_components/admin-lang-context";
 
 type AdminDashboardClientProps = {
   initialAppointments: Appointment[];
@@ -19,52 +20,52 @@ export default function AdminDashboardClient({
   initialAppointments,
 }: AdminDashboardClientProps) {
   const { appointments } = useAdminAppointmentsLive(initialAppointments);
+  const { t } = useAdminLang();
 
   const summaryItems = useMemo(() => {
     return [
       {
-        label: "Подтверждено",
+        label: t("dashboard.confirmed"),
         value: appointments.filter((appointment) => appointment.status === "confirmed").length,
         border: "border-emerald-100",
         iconBg: "bg-emerald-500",
         valueColor: "text-emerald-600",
       },
       {
-        label: "Ожидают ответа",
+        label: t("dashboard.pending"),
         value: appointments.filter((appointment) => appointment.status === "pending").length,
         border: "border-amber-100",
         iconBg: "bg-amber-400",
         valueColor: "text-amber-500",
       },
       {
-        label: "Завершено",
+        label: t("dashboard.completed"),
         value: appointments.filter((appointment) => appointment.status === "completed").length,
         border: "border-sky-100",
         iconBg: "bg-sky-500",
         valueColor: "text-sky-600",
       },
       {
-        label: "Отменено",
+        label: t("dashboard.cancelled"),
         value: appointments.filter((appointment) => appointment.status === "cancelled").length,
         border: "border-rose-100",
         iconBg: "bg-rose-500",
         valueColor: "text-rose-600",
       },
     ];
-  }, [appointments]);
+  }, [appointments, t]);
 
   return (
     <div className="min-h-screen bg-[#f4f7fb] text-slate-900">
       <div className="hero-appear rounded-[36px] border border-[#e3eaf1] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.06)]">
         <header className="border-b border-[#edf2f7] px-6 py-6 sm:px-8">
           <div>
-            <p className="text-sm font-medium text-emerald-600">Дашборд</p>
+            <p className="text-sm font-medium text-emerald-600">{t("nav.dashboard")}</p>
             <h1 className="mt-2 text-4xl font-semibold tracking-tight text-slate-900">
-              Панель управления
+              {t("dashboard.title")}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
-              Здесь отображаются последние записи пациентов и текущая сводка по
-              статусам. Уведомления о новых заявках появляются автоматически.
+              {t("dashboard.description")}
             </p>
           </div>
         </header>
@@ -73,16 +74,16 @@ export default function AdminDashboardClient({
           <section className="hero-appear hero-delay-1 rounded-[30px] border border-[#e8eef4] bg-white px-6 py-6 sm:px-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-sm font-medium text-emerald-600">Сводка по записям</p>
+                <p className="text-sm font-medium text-emerald-600">{t("dashboard.summaryTitle")}</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
-                  Актуальный статус всех заявок
+                  {t("dashboard.summarySubtitle")}
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
-                  Подтвержденные, ожидающие ответа, завершенные и отмененные заявки собраны в одном блоке.
+                  {t("dashboard.summaryDescription")}
                 </p>
               </div>
               <div className="rounded-2xl border border-[#e8eef4] bg-[#f8fbfd] px-4 py-3 text-sm text-slate-500">
-                Всего записей: <span className="font-semibold text-slate-900">{appointments.length}</span>
+                {t("dashboard.totalAppointments")} <span className="font-semibold text-slate-900">{appointments.length}</span>
               </div>
             </div>
 
@@ -110,15 +111,15 @@ export default function AdminDashboardClient({
           <section className="hero-appear hero-delay-3 rounded-[30px] border border-[#e8eef4] bg-[#fbfdff] p-5 sm:p-6">
             <div className="flex flex-col gap-3 border-b border-[#eef3f7] pb-5 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-400">Последние записи</p>
+                <p className="text-sm font-medium text-slate-400">{t("dashboard.recentTitle")}</p>
                 <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900">
-                  Новые заявки пациентов
+                  {t("dashboard.recentSubtitle")}
                 </h2>
               </div>
             </div>
 
             {appointments.length === 0 ? (
-              <div className="px-4 py-16 text-center text-sm text-slate-400">Новых записей пока нет.</div>
+              <div className="px-4 py-16 text-center text-sm text-slate-400">{t("dashboard.noRecent")}</div>
             ) : (
               <div className="mt-5 grid gap-4 xl:grid-cols-2">
                 {appointments.slice(0, 8).map((appointment, index) => (
@@ -147,27 +148,27 @@ export default function AdminDashboardClient({
                           <span
                             className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}
                           >
-                            {statusLabels[appointment.status]}
+                            {t(`status.${appointment.status}`)}
                           </span>
                         </div>
 
                         <div className="mt-5 grid gap-3 text-sm text-slate-500 sm:grid-cols-2">
                           <div>
-                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Дата визита</p>
+                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">{t("appointments.visitDate")}</p>
                             <p className="mt-1 font-medium text-slate-700">{formatDate(appointment.preferred_date)}</p>
                           </div>
                           <div>
-                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Время</p>
+                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">{t("appointments.time")}</p>
                             <p className="mt-1 font-medium text-slate-700">
-                              {appointment.preferred_time || "Не указано"}
+                              {appointment.preferred_time || t("appointments.notSpecified")}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Создано</p>
+                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">{t("appointments.created")}</p>
                             <p className="mt-1 font-medium text-slate-700">{formatDateTime(appointment.created_at)}</p>
                           </div>
                           <div>
-                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Язык</p>
+                            <p className="text-xs uppercase tracking-[0.12em] text-slate-300">{t("appointments.language")}</p>
                             <p className="mt-1 font-medium uppercase text-slate-700">{appointment.lang}</p>
                           </div>
                         </div>

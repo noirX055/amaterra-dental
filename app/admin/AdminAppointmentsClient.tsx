@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Appointment } from "./adminTypes";
 import { formatDate, formatDateTime, statusLabels, statusStyles } from "./adminTypes";
 import { useAppointmentsRealtime } from "./_components/use-appointments-realtime";
+import { useAdminLang } from "./_components/admin-lang-context";
 
 type AdminAppointmentsClientProps = {
   initialAppointments: Appointment[];
@@ -15,6 +16,7 @@ export default function AdminAppointmentsClient({
 }: AdminAppointmentsClientProps) {
   const router = useRouter();
   const { appointments } = useAppointmentsRealtime(initialAppointments);
+  const { t } = useAdminLang();
   const [query, setQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [statusDrafts, setStatusDrafts] = useState<Record<string, Appointment["status"]>>({});
@@ -101,12 +103,12 @@ export default function AdminAppointmentsClient({
     <div className="min-h-screen text-slate-100">
       <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
         <header className="border-b border-slate-800/80 pb-6">
-          <p className="text-sm font-medium text-emerald-400">Управление записями</p>
+          <p className="text-sm font-medium text-emerald-400">{t("appointments.management")}</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            Записи пациентов
+            {t("appointments.title")}
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            Просмотр, фильтрация и управление всеми записями на приём. Изменяйте статусы и добавляйте комментарии
+            {t("appointments.description")}
           </p>
         </header>
 
@@ -127,7 +129,7 @@ export default function AdminAppointmentsClient({
                 type="text"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Поиск: имя, фамилия или телефон"
+                placeholder={t("appointments.search")}
                 className="h-11 w-full rounded-xl border border-slate-700 bg-slate-950/60 pl-11 pr-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
               />
             </label>
@@ -165,14 +167,14 @@ export default function AdminAppointmentsClient({
           </div>
 
           <p className="mt-3 text-sm text-slate-300">
-            Найдено записей:{" "}
+            {t("appointments.found")}{" "}
             <span className="font-semibold text-white">{filteredAppointments.length}</span>
           </p>
         </section>
 
         {filteredAppointments.length === 0 ? (
           <div className="py-16 text-center text-sm text-slate-400">
-            По выбранным фильтрам записей не найдено.
+            {t("appointments.noResults")}
           </div>
         ) : (
           <div className="mt-6 grid gap-4">
@@ -187,7 +189,7 @@ export default function AdminAppointmentsClient({
                       {appointment.first_name} {appointment.last_name}
                     </h2>
                     <p className="mt-1 text-sm text-slate-300">
-                      {appointment.email ?? "Email не указан"} - {appointment.phone}
+                      {appointment.email ?? t("appointments.emailNotSpecified")} - {appointment.phone}
                     </p>
                   </div>
                   <span
@@ -199,21 +201,21 @@ export default function AdminAppointmentsClient({
 
                 <div className="mt-5 grid gap-3 text-sm text-slate-300 sm:grid-cols-2 xl:grid-cols-4">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Дата визита</p>
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">{t("appointments.visitDate")}</p>
                     <p className="mt-1 font-medium text-slate-100">{formatDate(appointment.preferred_date)}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Время</p>
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">{t("appointments.time")}</p>
                     <p className="mt-1 font-medium text-slate-100">
-                      {appointment.preferred_time ?? "Не указано"}
+                      {appointment.preferred_time ?? t("appointments.notSpecified")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Создано</p>
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">{t("appointments.created")}</p>
                     <p className="mt-1 font-medium text-slate-100">{formatDateTime(appointment.created_at)}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Язык</p>
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">{t("appointments.language")}</p>
                     <p className="mt-1 font-medium uppercase text-slate-100">{appointment.lang}</p>
                   </div>
                 </div>
@@ -226,7 +228,7 @@ export default function AdminAppointmentsClient({
 
                 <div className="mt-4 grid gap-3 rounded-2xl border border-slate-700/90 bg-slate-950/40 p-4">
                   <label className="grid gap-2">
-                    <span className="text-xs uppercase tracking-[0.12em] text-slate-400">Статус записи</span>
+                    <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
                     <select
                       value={statusDrafts[appointment.id] ?? appointment.status}
                       onChange={(event) =>
@@ -237,16 +239,16 @@ export default function AdminAppointmentsClient({
                       }
                       className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
                     >
-                      <option value="pending">{statusLabels.pending}</option>
-                      <option value="confirmed">{statusLabels.confirmed}</option>
-                      <option value="cancelled">{statusLabels.cancelled}</option>
-                      <option value="completed">{statusLabels.completed}</option>
+                      <option value="pending">{t("status.pending")}</option>
+                      <option value="confirmed">{t("status.confirmed")}</option>
+                      <option value="cancelled">{t("status.cancelled")}</option>
+                      <option value="completed">{t("status.completed")}</option>
                     </select>
                   </label>
 
                   <label className="grid gap-2">
                     <span className="text-xs uppercase tracking-[0.12em] text-slate-400">
-                      Комментарий администратора
+                      {t("appointments.adminComment")}
                     </span>
                     <textarea
                       value={commentDrafts[appointment.id] ?? ""}
@@ -256,7 +258,7 @@ export default function AdminAppointmentsClient({
                           [appointment.id]: event.target.value,
                         }))
                       }
-                      placeholder="Добавьте комментарий по записи"
+                      placeholder={t("appointments.addComment")}
                       rows={3}
                       className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
                     />
@@ -269,7 +271,7 @@ export default function AdminAppointmentsClient({
                       disabled={savingIds[appointment.id] === true}
                       className="h-10 rounded-xl bg-emerald-500 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {savingIds[appointment.id] ? "Сохранение..." : "Сохранить"}
+                      {savingIds[appointment.id] ? t("appointments.saving") : t("appointments.save")}
                     </button>
                     {saveErrors[appointment.id] ? (
                       <p className="text-sm text-rose-300">{saveErrors[appointment.id]}</p>

@@ -2,8 +2,10 @@
 
 import { useMemo } from "react";
 import { Appointment } from "../adminTypes";
+import { useAdminLang } from "./admin-lang-context";
 
 export function OverviewStats({ appointments }: { appointments: Appointment[] }) {
+  const { t } = useAdminLang();
   const stats = useMemo(() => {
     const now = new Date();
     const today = now.toISOString().split("T")[0];
@@ -29,7 +31,7 @@ export function OverviewStats({ appointments }: { appointments: Appointment[] })
 
   const cards = [
     {
-      label: "Всего записей",
+      label: t("stats.total"),
       value: stats.total,
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -40,7 +42,7 @@ export function OverviewStats({ appointments }: { appointments: Appointment[] })
       bgColor: "bg-gray-100",
     },
     {
-      label: "За последние 24ч",
+      label: t("stats.last24h"),
       value: stats.last24h,
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,7 +53,7 @@ export function OverviewStats({ appointments }: { appointments: Appointment[] })
       bgColor: "bg-blue-100",
     },
     {
-      label: "Сегодня",
+      label: t("stats.today"),
       value: stats.today,
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,7 +64,7 @@ export function OverviewStats({ appointments }: { appointments: Appointment[] })
       bgColor: "bg-emerald-100",
     },
     {
-      label: "На этой неделе",
+      label: t("stats.thisWeek"),
       value: stats.thisWeek,
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

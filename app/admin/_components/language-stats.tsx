@@ -2,8 +2,10 @@
 
 import { useMemo } from "react";
 import { Appointment } from "../adminTypes";
+import { useAdminLang } from "./admin-lang-context";
 
 export function LanguageStats({ appointments }: { appointments: Appointment[] }) {
+  const { t } = useAdminLang();
   const stats = useMemo(() => {
     const total = appointments.length || 1;
     const byLang = {
@@ -45,8 +47,8 @@ export function LanguageStats({ appointments }: { appointments: Appointment[] })
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Языки пациентов</h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Распределение по языкам</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t("dashboard.languagesTitle")}</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t("dashboard.languagesSubtitle")}</p>
       </div>
 
       <div className="space-y-4">

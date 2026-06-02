@@ -1,3 +1,12 @@
+export type Patient = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string | null;
+  created_at: string;
+};
+
 export type Appointment = {
   id: string;
   first_name: string;
@@ -11,6 +20,8 @@ export type Appointment = {
   admin_comment: string | null;
   lang: "ru" | "ro" | "en";
   doctor_id: string | null;
+  patient_id: string | null;
+  patient?: Patient | null;
   created_at: string;
 };
 

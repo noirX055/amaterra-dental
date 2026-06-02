@@ -141,6 +141,7 @@ export function LatestInsightsBlock({ t, lang }: Props) {
 
   return (
     <section
+      id="blog"
       data-reveal-on-scroll
       className="relative mx-auto mt-20 flex w-full max-w-7xl flex-col px-4 pt-12 pb-12 sm:px-6 lg:px-8 opacity-0 transition-opacity duration-700 translate-y-8 [&.is-visible]:opacity-100 [&.is-visible]:translate-y-0"
     >
@@ -161,7 +162,7 @@ export function LatestInsightsBlock({ t, lang }: Props) {
           </button>
         )}
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 flex-1">
+        <div className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-6 sm:-mx-6 sm:px-6 md:mx-0 md:grid md:grid-cols-2 md:px-0 lg:grid-cols-3 flex-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {isTranslating && (
           <div className="col-span-full flex items-center justify-center py-10">
             <div className="flex items-center gap-3">
@@ -175,13 +176,15 @@ export function LatestInsightsBlock({ t, lang }: Props) {
           </div>
         )}
         {!isTranslating && usePosts
-          ? visibleItems.map((post: any) => {
+          ? items.map((post: any, index: number) => {
               const hasImage = !!post.image_url;
+              const isVisibleOnDesktop = index >= currentIndex && index < currentIndex + 3;
+              
               return (
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="group relative flex flex-col items-center justify-between overflow-hidden rounded-[32px] p-8 text-center min-h-[460px] transition-transform duration-300 hover:-translate-y-1"
+                  className={`group relative flex w-[85vw] max-w-[350px] shrink-0 snap-center flex-col items-center justify-between overflow-hidden rounded-[32px] p-8 text-center min-h-[460px] transition-transform duration-300 hover:-translate-y-1 md:w-auto md:max-w-none ${!isVisibleOnDesktop ? "md:hidden" : ""}`}
                   style={{
                     backgroundColor: hasImage ? "transparent" : "#F7EDEB",
                     backgroundImage: hasImage ? `url(${post.image_url})` : "none",
@@ -204,12 +207,14 @@ export function LatestInsightsBlock({ t, lang }: Props) {
                 </Link>
               );
             })
-          : visibleItems.map((item: any, index: number) => {
+          : items.map((item: any, index: number) => {
               const hasImage = !!item.image;
+              const isVisibleOnDesktop = index >= currentIndex && index < currentIndex + 3;
+
               return (
                 <div
                   key={index}
-                  className="relative flex flex-col items-center justify-between overflow-hidden rounded-[32px] p-8 text-center min-h-[460px] transition-transform duration-300 hover:-translate-y-1"
+                  className={`relative flex w-[85vw] max-w-[350px] shrink-0 snap-center flex-col items-center justify-between overflow-hidden rounded-[32px] p-8 text-center min-h-[460px] transition-transform duration-300 hover:-translate-y-1 md:w-auto md:max-w-none ${!isVisibleOnDesktop ? "md:hidden" : ""}`}
                   style={{
                     backgroundColor: hasImage ? "transparent" : "#F7EDEB",
                     backgroundImage: hasImage ? `url(${item.image})` : "none",
@@ -246,40 +251,6 @@ export function LatestInsightsBlock({ t, lang }: Props) {
         </button>
       )}
     </div>
-
-      {items.length > 3 && (
-        <div className="mt-8 flex items-center justify-center gap-2">
-          <button
-            onClick={handlePrev}
-            disabled={!canGoPrev}
-            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          {Array.from({ length: items.length - 2 }).map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentIndex === idx ? "w-8 bg-zinc-900" : "w-2 bg-zinc-300 hover:bg-zinc-400"
-              }`}
-            />
-          ))}
-
-          <button
-            onClick={handleNext}
-            disabled={!canGoNext}
-            className="flex lg:hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-100 transition-all duration-300 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-900"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      )}
     </section>
   );
 }
