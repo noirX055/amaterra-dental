@@ -186,7 +186,7 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
       )}
 
       {/* Main content */}
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="flex min-h-screen flex-1 flex-col min-w-0 w-full overflow-x-hidden">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -244,8 +244,8 @@ export default function AdminShell({ userEmail, children }: AdminShellProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0">
+          <div className="mx-auto max-w-7xl w-full">
             {children}
           </div>
         </main>

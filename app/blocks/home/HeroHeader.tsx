@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { LANGS } from "./i18n";
 import type { HomeI18n, Lang } from "./types";
 
@@ -21,23 +23,31 @@ export function HeroHeader({
   setLang,
 }: HeroHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
   console.log("HeroHeader render, current lang:", lang, "isOpen:", isLangOpen);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setIsMobileMenuOpen(false);
 
-    // Небольшая задержка для закрытия меню
-    setTimeout(() => {
-      const element = document.querySelector(href);
+    // If it's a section link and we are on the homepage
+    if (href.startsWith("/#") && pathname === "/") {
+      e.preventDefault();
+      const targetId = href.replace("/#", "#");
+      const element = document.querySelector(targetId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 100);
+    }
+    // If it's the exact current path, do nothing
+    else if (href === pathname) {
+      e.preventDefault();
+    }
   };
 
   return (
     <header className="hero-appear-soft hero-delay-1 relative z-50 flex items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-8">
-      <a href="#" className="inline-flex h-10 flex-shrink-0 items-center overflow-visible sm:h-14">
+      <Link href="/" className="inline-flex h-10 flex-shrink-0 items-center overflow-visible sm:h-14">
         <Image
           src="/logo-large.webp"
           alt={t.brand}
@@ -46,21 +56,22 @@ export function HeroHeader({
           priority
           className="h-10 w-auto origin-left scale-[2.2] object-contain sm:h-14 sm:scale-[3.2] md:scale-[3.5]"
         />
-      </a>
+      </Link>
 
-      <nav className="hidden items-center gap-2 rounded-full border border-black/10 bg-white/70 px-2 py-1 text-sm font-medium text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-950/60 dark:text-zinc-200 md:flex md:ml-auto md:mr-4">
+      <nav className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden items-center gap-2 rounded-full border border-black/10 bg-white/70 px-2 py-1 text-sm font-medium text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-950/60 dark:text-zinc-200 lg:flex">
         {t.nav.map((label, index) => {
-          const sectionIds = ["#home", "#about", "#services", "#reviews", "#blog", "#appointment"];
+          const sectionIds = ["/#home", "/#about", "/#services", "/#reviews", "/blog", "/#appointment"];
           const href = sectionIds[index] || "#";
 
           return (
-            <a
+            <Link
               key={label}
               href={href}
+              onClick={(e) => handleNavClick(e, href)}
               className="rounded-full px-3 py-1.5 transition-colors hover:bg-black/4 hover:text-zinc-900 dark:hover:bg-white/6 dark:hover:text-white"
             >
               {label}
-            </a>
+            </Link>
           );
         })}
       </nav>
@@ -176,17 +187,18 @@ export function HeroHeader({
           <div className="fixed left-0 right-0 top-[80px] z-[9999] px-4 md:hidden">
             <nav className="flex flex-col gap-1 rounded-2xl border border-black/10 bg-white p-2 shadow-2xl">
               {t.nav.map((label, index) => {
-                const sectionIds = ["#home", "#about", "#services", "#reviews", "#blog", "#appointment"];
+                const sectionIds = ["/#home", "/#about", "/#services", "/#reviews", "/blog", "/#appointment"];
                 const href = sectionIds[index] || "#";
 
                 return (
-                  <button
+                  <Link
                     key={label}
-                    onClick={() => handleNavClick(href)}
-                    className="w-full text-left rounded-xl px-4 py-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-black/5"
+                    href={href}
+                    onClick={(e) => handleNavClick(e, href)}
+                    className="block w-full text-left rounded-xl px-4 py-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-black/5"
                   >
                     {label}
-                  </button>
+                  </Link>
                 );
               })}
             </nav>

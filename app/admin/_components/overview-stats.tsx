@@ -86,7 +86,7 @@ export function OverviewStats({ appointments }: { appointments: Appointment[] })
           <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${card.bgColor}`}>
             <div className={card.color}>{card.icon}</div>
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{card.value}</p>
             <p className="truncate text-xs text-gray-500 dark:text-gray-400">{card.label}</p>
           </div>

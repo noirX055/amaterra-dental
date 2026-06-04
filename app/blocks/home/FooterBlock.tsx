@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { HomeI18n } from "./types";
 
 interface Props {
@@ -6,6 +8,21 @@ interface Props {
 }
 
 export function FooterBlock({ t }: Props) {
+  const pathname = usePathname();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("/#") && pathname === "/") {
+      e.preventDefault();
+      const targetId = href.replace("/#", "#");
+      const element = document.querySelector(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else if (href === pathname) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <footer className="w-full bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 pt-20 pb-10 sm:pt-24 sm:pb-12 border-t border-zinc-800 z-10 relative overflow-hidden">
       {/* Decorative background elements */}
@@ -90,28 +107,28 @@ export function FooterBlock({ t }: Props) {
             {/* Column 1 */}
             <ul className="flex flex-col gap-4 sm:gap-5">
               <li>
-                <a href="#about" className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
+                <Link href="/#about" onClick={(e) => handleNavClick(e, "/#about")} className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
                   {t.footerLinksCol1[0]}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
+                <Link href="/#services" onClick={(e) => handleNavClick(e, "/#services")} className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
                   {t.footerLinksCol1[1]}
-                </a>
+                </Link>
               </li>
             </ul>
 
             {/* Column 2 */}
             <ul className="flex flex-col gap-4 sm:gap-5">
               <li>
-                <a href="#doctors" className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
+                <Link href="/#doctors" onClick={(e) => handleNavClick(e, "/#doctors")} className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
                   {t.footerLinksCol2[0]}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#appointment" className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
+                <Link href="/#appointment" onClick={(e) => handleNavClick(e, "/#appointment")} className="text-xs sm:text-[13px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all duration-300 hover:translate-x-1 inline-block">
                   {t.footerLinksCol2[1]}
-                </a>
+                </Link>
               </li>
             </ul>
 

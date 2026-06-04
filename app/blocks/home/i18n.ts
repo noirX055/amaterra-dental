@@ -237,10 +237,10 @@ export const I18N: Record<Lang, HomeI18n> = {
     workGalleryTitle: "Наши работы",
     workGallerySubtitle: "Примеры наших стоматологических работ",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "Медик-генералист", image: "/ruslan-ceban.webp" },
-      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/sorin-robac.webp" },
-      { name: "Alexandra Ursu", specialty: "Терапевт", image: "/doctor-3.jpg" },
-      { name: "Dumitru Gurenco", specialty: "Терапевт-протезист", image: "/doctor-4.jpg" },
+      { name: "Ruslan Ceban", specialty: "Медик-генералист", image: "/ruslan-ceban.webp" },
+      { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/sorin-robac.jpg" },
+      { name: "Alexandra Ursu", specialty: "Терапевт", image: "/alexandra.JPG" },
+      { name: "Dumitru Gurenco", specialty: "Терапевт-протезист", image: "/dumitru.JPG" },
       { name: "Natalia Lozova", specialty: "Ортодонт", image: "/natalialozov.webp" }
     ],
     reviewsTitle: "Что говорят наши клиенты:",
@@ -506,10 +506,10 @@ export const I18N: Record<Lang, HomeI18n> = {
     workGalleryTitle: "Lucrările noastre",
     workGallerySubtitle: "Exemple ale lucrărilor noastre stomatologice",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "Medic Generalist", image: "/ruslan-ceban.webp" },
-      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/sorin-robac.webp" },
-      { name: "Alexandra Ursu", specialty: "Terapeut", image: "/doctor-3.jpg" },
-      { name: "Dumitru Gurenco", specialty: "Terapeut Protezist", image: "/doctor-4.jpg" },
+      { name: "Ruslan Ceban", specialty: "Medic Generalist", image: "/ruslan-ceban.webp" },
+      { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/sorin-robac.jpg" },
+      { name: "Alexandra Ursu", specialty: "Terapeut", image: "/alexandra.JPG" },
+      { name: "Dumitru Gurenco", specialty: "Terapeut-protetician", image: "/dumitru.JPG" },
       { name: "Natalia Lozova", specialty: "Ortodont", image: "/natalialozov.webp" }
     ],
     reviewsTitle: "Vedeți ce spun clienții noștri:",
@@ -775,10 +775,10 @@ export const I18N: Record<Lang, HomeI18n> = {
     workGalleryTitle: "Our Work",
     workGallerySubtitle: "Examples of our dental work",
     ourDoctors: [
-      { name: "Ceban Ruslan", specialty: "General Practitioner", image: "/ruslan-ceban.webp" },
-      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/sorin-robac.webp" },
-      { name: "Alexandra Ursu", specialty: "Therapist", image: "/doctor-3.jpg" },
-      { name: "Dumitru Gurenco", specialty: "Therapist Prosthetist", image: "/doctor-4.jpg" },
+      { name: "Ruslan Ceban", specialty: "General Practitioner", image: "/ruslan-ceban.webp" },
+      { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/sorin-robac.jpg" },
+      { name: "Alexandra Ursu", specialty: "Therapist", image: "/alexandra.JPG" },
+      { name: "Dumitru Gurenco", specialty: "Therapist-Prosthodontist", image: "/dumitru.JPG" },
       { name: "Natalia Lozova", specialty: "Orthodontist", image: "/natalialozov.webp" }
     ],
     reviewsTitle: "See What Our Clients Have to Say:",

@@ -10,18 +10,24 @@ type FindUsBlockProps = {
 const contactStatusByLang = {
   ru: {
     messagePlaceholder: "Опишите ваш вопрос",
-    success: "Сообщение отправлено. Мы свяжемся с вами.",
+    success: "Запись отправлена. Мы свяжемся с вами.",
     error: "Не удалось отправить форму. Попробуйте еще раз.",
+    phonePlaceholder: "Телефон",
+    lastNamePlaceholder: "Фамилия",
   },
   ro: {
     messagePlaceholder: "Descrieti solicitarea dvs.",
-    success: "Mesaj trimis. Va contactam in curand.",
+    success: "Programare trimisă. Vă contactăm în curând.",
     error: "Nu am reusit sa trimitem formularul. Incercati din nou.",
+    phonePlaceholder: "Telefon",
+    lastNamePlaceholder: "Numele de familie",
   },
   en: {
     messagePlaceholder: "Describe your request",
-    success: "Message sent. We will contact you soon.",
+    success: "Appointment sent. We will contact you soon.",
     error: "Failed to submit form. Please try again.",
+    phonePlaceholder: "Phone",
+    lastNamePlaceholder: "Last name",
   },
 } as const;
 
@@ -37,22 +43,25 @@ export function FindUsBlock({ t, lang }: FindUsBlockProps) {
 
     const formData = new FormData(form);
     const payload = {
-      name: String(formData.get("name") ?? ""),
+      firstName: String(formData.get("name") ?? ""),
+      lastName: String(formData.get("lastName") ?? ""),
+      phone: String(formData.get("phone") ?? ""),
       email: String(formData.get("email") ?? ""),
-      message: String(formData.get("message") ?? ""),
+      notes: String(formData.get("message") ?? ""),
       preferredDate: String(formData.get("preferredDate") ?? ""),
       preferredTime: String(formData.get("preferredTime") ?? ""),
+      lang,
     };
 
     try {
-      const response = await fetch("/api/contact-messages", {
+      const response = await fetch("/api/appointments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit contact message");
+        throw new Error("Failed to submit appointment");
       }
 
       form.reset();
@@ -82,10 +91,26 @@ export function FindUsBlock({ t, lang }: FindUsBlockProps) {
             className="mt-10 flex flex-col gap-4"
             onSubmit={handleSubmit}
           >
+            <div className="flex gap-3 sm:max-w-sm">
+              <input
+                name="name"
+                type="text"
+                placeholder={t.findUsName}
+                required
+                className="h-13 w-full flex-1 rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400"
+              />
+              <input
+                name="lastName"
+                type="text"
+                placeholder={contactStatusByLang[lang].lastNamePlaceholder}
+                required
+                className="h-13 w-full flex-1 rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400"
+              />
+            </div>
             <input
-              name="name"
-              type="text"
-              placeholder={t.findUsName}
+              name="phone"
+              type="tel"
+              placeholder={contactStatusByLang[lang].phonePlaceholder}
               required
               className="h-13 w-full rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 sm:max-w-sm"
             />
@@ -93,7 +118,6 @@ export function FindUsBlock({ t, lang }: FindUsBlockProps) {
               name="email"
               type="email"
               placeholder={t.findUsEmail}
-              required
               className="h-13 w-full rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 sm:max-w-sm"
             />
 
@@ -101,6 +125,7 @@ export function FindUsBlock({ t, lang }: FindUsBlockProps) {
               <input
                 name="preferredDate"
                 type="date"
+                required
                 aria-label={t.findUsDate}
                 className="h-13 flex-1 rounded-full border border-zinc-200 bg-white px-5 text-sm text-zinc-500 outline-none transition-colors focus:border-zinc-400"
               />

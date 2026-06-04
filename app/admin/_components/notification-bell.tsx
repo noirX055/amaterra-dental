@@ -34,7 +34,8 @@ export function NotificationBell() {
     }
 
     loadNotifications();
-    subscribeToNewAppointments();
+    const cleanup = subscribeToNewAppointments();
+    return cleanup;
   }, []);
 
   useEffect(() => {
@@ -69,11 +70,12 @@ export function NotificationBell() {
 
   function subscribeToNewAppointments() {
     const supabase = createClient();
+    const channelName = `appointments-realtime-${Date.now()}`;
 
     console.log("Setting up Realtime subscription...");
 
     const channel = supabase
-      .channel("appointments-realtime")
+      .channel(channelName)
       .on(
         "postgres_changes",
         {

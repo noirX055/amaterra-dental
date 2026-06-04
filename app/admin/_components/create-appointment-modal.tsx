@@ -322,15 +322,14 @@ export function CreateAppointmentModal({
 
             <label className="grid gap-2">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t("modal.doctor")} <span className="text-red-500">*</span>
+                {t("modal.doctor")}
               </span>
               <select
                 name="doctor"
-                required
                 className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">{t("modal.selectDoctor")}</option>
-                <option value="d1">Ceban Ruslan - Медик-генералист</option>
+                <option value="d1">Ruslan Ceban - Медик-генералист</option>
                 <option value="d2">Sorin Rabac - Терапевт-протезист</option>
                 <option value="d3">Alexandra Ursu - Терапевт</option>
                 <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>

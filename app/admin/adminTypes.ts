@@ -7,6 +7,17 @@ export type Patient = {
   created_at: string;
 };
 
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  message: string | null;
+  preferred_date: string | null;
+  preferred_time: string | null;
+  is_read: boolean;
+  created_at: string;
+};
+
 export type Appointment = {
   id: string;
   first_name: string;

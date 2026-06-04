@@ -11,7 +11,7 @@ type AdminPatientsClientProps = {
 };
 
 const doctors = [
-  { id: "d1", name: "Ceban Ruslan" },
+  { id: "d1", name: "Ruslan Ceban" },
   { id: "d2", name: "Sorin Rabac" },
   { id: "d3", name: "Alexandra Ursu" },
   { id: "d4", name: "Dumitru Gurenco" },
@@ -222,14 +222,14 @@ export default function AdminPatientsClient({
                       {patient.appointments.map((historyItem) => (
                         <div key={historyItem.id} className="rounded-xl border border-slate-700/80 bg-slate-900/60 p-3">
                           <div className="flex flex-wrap items-center justify-between gap-2">
-                            <p className="text-sm font-medium text-slate-100">
+                            <div className="text-sm font-medium text-slate-100">
                                 <p className="font-medium text-gray-900 dark:text-white">
                                   {formatDate(historyItem.preferred_date)}
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                   {t("appointments.time")}: {historyItem.preferred_time ?? t("appointments.notSpecified")}
                                 </p>
-                            </p>
+                            </div>
                             <span
                               className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[historyItem.status]}`}
                             >

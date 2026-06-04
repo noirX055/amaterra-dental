@@ -21,8 +21,8 @@ function StatCard({ title, count, percentage, trend, icon, color, bgColor }: Sta
   return (
     <div className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
       <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+        <div className="flex-1 min-w-0 pr-4">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400 truncate">{title}</p>
           <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{count}</p>
           <div className="mt-2 flex items-center gap-1 text-sm">
             <span className={`font-semibold ${trendColor}`}>

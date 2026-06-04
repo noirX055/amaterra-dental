@@ -1,26 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import type { BlogPost } from "@/types/blog";
-import { blogService } from "@/services/blogService";
 import type { Lang } from "@/app/blocks/home/types";
 import { LANG_STORAGE_KEY, I18N } from "@/app/blocks/home/i18n";
 import { translateText } from "@/lib/translate";
 import { BookingModal } from "@/app/blocks/home/BookingModal";
 
-export default function BlogPostPage() {
-  const params = useParams();
-  const router = useRouter();
-  const slug = params.slug as string;
-
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export default function BlogPostClient({ initialPost }: { initialPost: BlogPost }) {
+  const [post, setPost] = useState<BlogPost>(initialPost);
   const [lang, setLang] = useState<Lang>("ru");
-  const [translatedTitle, setTranslatedTitle] = useState<string>("");
-  const [translatedExcerpt, setTranslatedExcerpt] = useState<string>("");
-  const [translatedContent, setTranslatedContent] = useState<string>("");
+  const [translatedTitle, setTranslatedTitle] = useState<string>(initialPost.title);
+  const [translatedExcerpt, setTranslatedExcerpt] = useState<string>(initialPost.excerpt || "");
+  const [translatedContent, setTranslatedContent] = useState<string>(initialPost.content);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
@@ -36,27 +29,6 @@ export default function BlogPostPage() {
   }, []);
 
   useEffect(() => {
-    async function loadPost() {
-      try {
-        const data = await blogService.getPostBySlug(slug);
-        if (!data) {
-          router.push("/");
-          return;
-        }
-        setPost(data);
-      } catch (error) {
-        console.error("Failed to load blog post:", error);
-        router.push("/");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadPost();
-  }, [slug, router]);
-
-  useEffect(() => {
-    if (!post) return;
-
     // If selected language matches source language, no translation needed
     if (lang === post.source_lang) {
       setTranslatedTitle(post.title);
@@ -67,7 +39,6 @@ export default function BlogPostPage() {
 
     // Translate to selected language
     async function translate() {
-      if (!post) return;
       setIsTranslating(true);
       try {
         const [title, excerpt, content] = await Promise.all([
@@ -123,18 +94,6 @@ export default function BlogPostPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-900" />
-      </div>
-    );
-  }
-
-  if (!post) {
-    return null;
-  }
-
   if (isTranslating) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white">
@@ -156,7 +115,7 @@ export default function BlogPostPage() {
       <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur-lg">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link
-            href="/blog"
+            href="/"
             className="text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900"
           >
             {getBackText()}

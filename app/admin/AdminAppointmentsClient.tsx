@@ -19,10 +19,14 @@ export default function AdminAppointmentsClient({
   const { t } = useAdminLang();
   const [query, setQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [statusDrafts, setStatusDrafts] = useState<Record<string, Appointment["status"]>>({});
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [savingIds, setSavingIds] = useState<Record<string, boolean>>({});
   const [saveErrors, setSaveErrors] = useState<Record<string, string | null>>({});
+  const [showHistory, setShowHistory] = useState(false);
+  const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setStatusDrafts((prev) => {
@@ -94,21 +98,41 @@ export default function AdminAppointmentsClient({
         search.length === 0 || fullName.includes(search) || phone.includes(search);
       const matchesDate =
         selectedDate.length === 0 || appointment.preferred_date === selectedDate;
+      const matchesStatus = showHistory
+        ? true
+        : appointment.status === "pending" || appointment.status === "confirmed";
 
-      return matchesSearch && matchesDate;
+      return matchesSearch && matchesDate && matchesStatus;
     });
-  }, [appointments, query, selectedDate]);
+  }, [appointments, query, selectedDate, showHistory]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, selectedDate, showHistory]);
+
+  const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+  const paginatedAppointments = filteredAppointments.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="min-h-screen text-slate-100">
       <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
         <header className="border-b border-slate-800/80 pb-6">
           <p className="text-sm font-medium text-emerald-400">{t("appointments.management")}</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            {t("appointments.title")}
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white flex items-center justify-between">
+            {showHistory ? t("appointments.historyTitle") ?? "История записей" : t("appointments.title")}
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-sm font-medium text-emerald-500 hover:text-emerald-400 border border-emerald-500/30 rounded-full px-4 py-1.5 transition-colors"
+            >
+              {showHistory ? t("appointments.backToActive") ?? "К активным записям" : t("appointments.viewHistory") ?? "История записей"}
+            </button>
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            {t("appointments.description")}
+            {showHistory ? t("appointments.historyDescription") ?? "Просмотр всех записей, включая завершенные и отмененные" : t("appointments.description")}
           </p>
         </header>
 
@@ -178,7 +202,7 @@ export default function AdminAppointmentsClient({
           </div>
         ) : (
           <div className="mt-6 grid gap-4">
-            {filteredAppointments.map((appointment) => (
+            {paginatedAppointments.map((appointment) => (
               <article
                 key={appointment.id}
                 className="rounded-[24px] border border-slate-700 bg-slate-900/50 p-5 shadow-[0_12px_28px_rgba(2,6,23,0.4)]"
@@ -226,60 +250,105 @@ export default function AdminAppointmentsClient({
                   </p>
                 ) : null}
 
-                <div className="mt-4 grid gap-3 rounded-2xl border border-slate-700/90 bg-slate-950/40 p-4">
-                  <label className="grid gap-2">
-                    <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
-                    <select
-                      value={statusDrafts[appointment.id] ?? appointment.status}
-                      onChange={(event) =>
-                        setStatusDrafts((prev) => ({
-                          ...prev,
-                          [appointment.id]: event.target.value as Appointment["status"],
-                        }))
-                      }
-                      className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                <div className="mt-4 flex justify-between items-center">
+                  <button
+                    onClick={() => setExpandedIds(prev => ({ ...prev, [appointment.id]: !prev[appointment.id] }))}
+                    className="text-sm font-medium text-emerald-500 hover:text-emerald-400 flex items-center gap-2 transition-colors"
+                  >
+                    <span>{expandedIds[appointment.id] ? (t("common.hide") || "Скрыть") : (t("common.details") || "Подробнее")}</span>
+                    <svg
+                      className={`h-4 w-4 transition-transform duration-300 ${expandedIds[appointment.id] ? "rotate-180" : ""}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     >
-                      <option value="pending">{t("status.pending")}</option>
-                      <option value="confirmed">{t("status.confirmed")}</option>
-                      <option value="cancelled">{t("status.cancelled")}</option>
-                      <option value="completed">{t("status.completed")}</option>
-                    </select>
-                  </label>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
 
-                  <label className="grid gap-2">
-                    <span className="text-xs uppercase tracking-[0.12em] text-slate-400">
-                      {t("appointments.adminComment")}
-                    </span>
-                    <textarea
-                      value={commentDrafts[appointment.id] ?? ""}
-                      onChange={(event) =>
-                        setCommentDrafts((prev) => ({
-                          ...prev,
-                          [appointment.id]: event.target.value,
-                        }))
-                      }
-                      placeholder={t("appointments.addComment")}
-                      rows={3}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
-                    />
-                  </label>
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${
+                    expandedIds[appointment.id] ? "grid-rows-[1fr] mt-4 opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="grid gap-3 rounded-2xl border border-slate-700/90 bg-slate-950/40 p-4">
+                      <label className="grid gap-2">
+                        <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
+                        <select
+                          value={statusDrafts[appointment.id] ?? appointment.status}
+                          onChange={(event) =>
+                            setStatusDrafts((prev) => ({
+                              ...prev,
+                              [appointment.id]: event.target.value as Appointment["status"],
+                            }))
+                          }
+                          className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                        >
+                          <option value="pending">{t("status.pending")}</option>
+                          <option value="confirmed">{t("status.confirmed")}</option>
+                          <option value="cancelled">{t("status.cancelled")}</option>
+                          <option value="completed">{t("status.completed")}</option>
+                        </select>
+                      </label>
 
-                  <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => saveAppointment(appointment)}
-                      disabled={savingIds[appointment.id] === true}
-                      className="h-10 rounded-xl bg-emerald-500 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {savingIds[appointment.id] ? t("appointments.saving") : t("appointments.save")}
-                    </button>
-                    {saveErrors[appointment.id] ? (
-                      <p className="text-sm text-rose-300">{saveErrors[appointment.id]}</p>
-                    ) : null}
+                      <label className="grid gap-2">
+                        <span className="text-xs uppercase tracking-[0.12em] text-slate-400">
+                          {t("appointments.adminComment")}
+                        </span>
+                        <textarea
+                          value={commentDrafts[appointment.id] ?? ""}
+                          onChange={(event) =>
+                            setCommentDrafts((prev) => ({
+                              ...prev,
+                              [appointment.id]: event.target.value,
+                            }))
+                          }
+                          placeholder={t("appointments.addComment")}
+                          rows={3}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
+                        />
+                      </label>
+
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => saveAppointment(appointment)}
+                          disabled={savingIds[appointment.id] === true}
+                          className="h-10 rounded-xl bg-emerald-500 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {savingIds[appointment.id] ? t("appointments.saving") : t("appointments.save")}
+                        </button>
+                        {saveErrors[appointment.id] ? (
+                          <p className="text-sm text-rose-300">{saveErrors[appointment.id]}</p>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </article>
             ))}
+
+            {totalPages > 1 && (
+              <div className="mt-6 flex items-center justify-between border-t border-slate-800/80 pt-6">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t("common.prev") || "Назад"}
+                </button>
+                <span className="text-sm text-slate-400">
+                  {t("common.page") || "Страница"} {currentPage} {t("common.of") || "из"} {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {t("common.next") || "Вперед"}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -187,14 +187,14 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
             />
             <select
               name="doctor"
-              required
               className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white"
             >
               <option value="">Выберите врача</option>
-              <option value="d1">Анна Мороз - Терапевт-стоматолог</option>
-              <option value="d2">Игорь Петреску - Ортодонт</option>
-              <option value="d3">Марина Раду - Хирург-имплантолог</option>
-              <option value="d4">Виктор Савин - Пародонтолог</option>
+              <option value="d1">Ruslan Ceban - Медик-генералист</option>
+              <option value="d2">Sorin Rabac - Терапевт-протезист</option>
+              <option value="d3">Alexandra Ursu - Терапевт</option>
+              <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>
+              <option value="d5">Natalia Lozova - Ортодонт</option>
             </select>
             <textarea
               name="notes"
