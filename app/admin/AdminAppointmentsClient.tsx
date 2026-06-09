@@ -11,6 +11,18 @@ type AdminAppointmentsClientProps = {
   initialAppointments: Appointment[];
 };
 
+const DOCTORS: Record<string, string> = {
+  d1: "Ruslan Ceban",
+  d2: "Sorin Rabac",
+  d4: "Dumitru Gurenco",
+  d5: "Natalia Lozova",
+};
+
+function getDoctorName(doctorId: string | null | undefined, fallback: string): string {
+  if (!doctorId) return fallback;
+  return DOCTORS[doctorId] ?? doctorId;
+}
+
 export default function AdminAppointmentsClient({
   initialAppointments,
 }: AdminAppointmentsClientProps) {
@@ -23,6 +35,8 @@ export default function AdminAppointmentsClient({
   const itemsPerPage = 10;
   const [statusDrafts, setStatusDrafts] = useState<Record<string, Appointment["status"]>>({});
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
+  const [dateDrafts, setDateDrafts] = useState<Record<string, string>>({});
+  const [timeDrafts, setTimeDrafts] = useState<Record<string, string>>({});
   const [savingIds, setSavingIds] = useState<Record<string, boolean>>({});
   const [saveErrors, setSaveErrors] = useState<Record<string, string | null>>({});
   const [showHistory, setShowHistory] = useState(false);
@@ -48,12 +62,34 @@ export default function AdminAppointmentsClient({
       }
       return next;
     });
+
+    setDateDrafts((prev) => {
+      const next = { ...prev };
+      for (const appointment of appointments) {
+        if (next[appointment.id] === undefined) {
+          next[appointment.id] = appointment.preferred_date ?? "";
+        }
+      }
+      return next;
+    });
+
+    setTimeDrafts((prev) => {
+      const next = { ...prev };
+      for (const appointment of appointments) {
+        if (next[appointment.id] === undefined) {
+          next[appointment.id] = appointment.preferred_time ?? "";
+        }
+      }
+      return next;
+    });
   }, [appointments]);
 
   async function saveAppointment(appointment: Appointment) {
     const appointmentId = appointment.id;
     const status = statusDrafts[appointmentId] ?? appointment.status;
     const adminComment = (commentDrafts[appointmentId] ?? "").trim();
+    const preferredDate = dateDrafts[appointmentId] ?? appointment.preferred_date;
+    const preferredTime = timeDrafts[appointmentId] ?? appointment.preferred_time ?? "";
 
     setSavingIds((prev) => ({ ...prev, [appointmentId]: true }));
     setSaveErrors((prev) => ({ ...prev, [appointmentId]: null }));
@@ -61,13 +97,13 @@ export default function AdminAppointmentsClient({
     try {
       const response = await fetch("/api/admin/appointments", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: appointmentId,
           status,
           adminComment,
+          preferredDate,
+          preferredTime: preferredTime || null,
         }),
       });
 
@@ -239,8 +275,10 @@ export default function AdminAppointmentsClient({
                     <p className="mt-1 font-medium text-slate-100">{formatDateTime(appointment.created_at)}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">{t("appointments.language")}</p>
-                    <p className="mt-1 font-medium uppercase text-slate-100">{appointment.lang}</p>
+                    <p className="text-xs uppercase tracking-[0.12em] text-slate-500">{t("patients.doctor")}</p>
+                    <p className="mt-1 font-medium text-slate-100">
+                      {getDoctorName(appointment.doctor_id, t("appointments.notSpecified"))}
+                    </p>
                   </div>
                 </div>
 
@@ -272,30 +310,54 @@ export default function AdminAppointmentsClient({
                 >
                   <div className="overflow-hidden">
                     <div className="grid gap-3 rounded-2xl border border-slate-700/90 bg-slate-950/40 p-4">
-                      <label className="grid gap-2">
-                        <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
-                        <select
-                          value={statusDrafts[appointment.id] ?? appointment.status}
-                          onChange={(event) =>
-                            setStatusDrafts((prev) => ({
-                              ...prev,
-                              [appointment.id]: event.target.value as Appointment["status"],
-                            }))
-                          }
-                          className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
-                        >
-                          <option value="pending">{t("status.pending")}</option>
-                          <option value="confirmed">{t("status.confirmed")}</option>
-                          <option value="cancelled">{t("status.cancelled")}</option>
-                          <option value="completed">{t("status.completed")}</option>
-                        </select>
-                      </label>
+                        {/* Date & Time */}
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <label className="grid gap-2">
+                            <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.visitDate")}</span>
+                            <input
+                              type="date"
+                              value={dateDrafts[appointment.id] ?? appointment.preferred_date}
+                              onChange={(e) => setDateDrafts((prev) => ({ ...prev, [appointment.id]: e.target.value }))}
+                              className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                            />
+                          </label>
+                          <label className="grid gap-2">
+                            <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.time")}</span>
+                            <input
+                              type="time"
+                              value={timeDrafts[appointment.id] ?? appointment.preferred_time ?? ""}
+                              onChange={(e) => setTimeDrafts((prev) => ({ ...prev, [appointment.id]: e.target.value }))}
+                              className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                            />
+                          </label>
+                        </div>
 
-                      <label className="grid gap-2">
-                        <span className="text-xs uppercase tracking-[0.12em] text-slate-400">
-                          {t("appointments.adminComment")}
-                        </span>
-                        <textarea
+                        {/* Status */}
+                        <label className="grid gap-2">
+                          <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
+                          <select
+                            value={statusDrafts[appointment.id] ?? appointment.status}
+                            onChange={(event) =>
+                              setStatusDrafts((prev) => ({
+                                ...prev,
+                                [appointment.id]: event.target.value as Appointment["status"],
+                              }))
+                            }
+                            className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                          >
+                            <option value="pending">{t("status.pending")}</option>
+                            <option value="confirmed">{t("status.confirmed")}</option>
+                            <option value="cancelled">{t("status.cancelled")}</option>
+                            <option value="completed">{t("status.completed")}</option>
+                          </select>
+                        </label>
+
+                        {/* Comment */}
+                        <label className="grid gap-2">
+                          <span className="text-xs uppercase tracking-[0.12em] text-slate-400">
+                            {t("appointments.adminComment")}
+                          </span>
+                          <textarea
                           value={commentDrafts[appointment.id] ?? ""}
                           onChange={(event) =>
                             setCommentDrafts((prev) => ({

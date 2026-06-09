@@ -109,6 +109,7 @@ export function CreateAppointmentModal({
       doctor: String(formData.get("doctor") ?? ""),
       patientId: selectedPatient?.id || undefined,
       lang: "ru",
+      source: "admin",
     };
 
     try {
@@ -121,6 +122,16 @@ export function CreateAppointmentModal({
       if (!response.ok) {
         const errorData = (await response.json().catch(() => null)) as { error?: string } | null;
         throw new Error(errorData?.error ?? t("modal.error"));
+      }
+
+      // Mark this appointment as admin-created so notifications polling skips it
+      const responseData = (await response.json().catch(() => null)) as { appointmentId?: string } | null;
+      if (responseData?.appointmentId) {
+        const existing = sessionStorage.getItem("admin-created-ids");
+        const ids: string[] = existing ? JSON.parse(existing) : [];
+        ids.push(responseData.appointmentId);
+        // keep only last 20
+        sessionStorage.setItem("admin-created-ids", JSON.stringify(ids.slice(-20)));
       }
 
       showToast(t("modal.success"), "success");

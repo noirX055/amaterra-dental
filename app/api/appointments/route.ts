@@ -14,6 +14,7 @@ type AppointmentPayload = {
   lang?: "ru" | "ro" | "en";
   doctor?: string;
   patientId?: string;
+  source?: "admin" | "site";
 };
 
 export async function POST(request: Request) {
@@ -90,7 +91,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true });
+    // Get the inserted appointment id
+    const { data: inserted } = await adminSupabase
+      .from("appointments")
+      .select("id")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    return NextResponse.json({ ok: true, source: body.source ?? "site", appointmentId: inserted?.id ?? null });
   } catch {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }

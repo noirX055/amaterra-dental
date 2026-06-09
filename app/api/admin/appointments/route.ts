@@ -65,6 +65,8 @@ type UpdateAppointmentPayload = {
   id?: string;
   status?: (typeof ALLOWED_STATUSES)[number];
   adminComment?: string | null;
+  preferredDate?: string | null;
+  preferredTime?: string | null;
 };
 
 export async function PATCH(request: Request) {
@@ -87,6 +89,8 @@ export async function PATCH(request: Request) {
   const id = (body.id ?? "").trim();
   const status = body.status;
   const adminComment = body.adminComment?.trim() ?? null;
+  const preferredDate = (body.preferredDate ?? "").trim() || null;
+  const preferredTime = (body.preferredTime ?? "").trim() || null;
 
   if (!id) {
     return NextResponse.json({ error: "Appointment id is required" }, { status: 400 });
@@ -97,12 +101,16 @@ export async function PATCH(request: Request) {
   }
 
   const adminSupabase = createAdminClient();
+  const updatePayload: Record<string, unknown> = {
+    status,
+    admin_comment: adminComment,
+  };
+  if (preferredDate) updatePayload.preferred_date = preferredDate;
+  if (preferredTime !== undefined) updatePayload.preferred_time = preferredTime;
+
   const { error } = await adminSupabase
     .from("appointments")
-    .update({
-      status,
-      admin_comment: adminComment,
-    })
+    .update(updatePayload)
     .eq("id", id);
 
   if (error && isMissingAdminCommentColumn(error.message)) {

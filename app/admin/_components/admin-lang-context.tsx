@@ -336,12 +336,22 @@ const AdminLangContext = createContext<AdminLangContextType>({
 export function AdminLangProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<AdminLang>("ro");
 
+  // Restore saved language
   useEffect(() => {
     const saved = localStorage.getItem(ADMIN_LANG_KEY) as AdminLang | null;
     if (saved === "ru" || saved === "ro") {
       setLangState(saved);
     }
   }, []);
+
+  // Sync document lang so native <input type="date"> uses the correct locale
+  useEffect(() => {
+    const prev = document.documentElement.lang;
+    document.documentElement.lang = lang === "ro" ? "ro" : "ru";
+    return () => {
+      document.documentElement.lang = prev;
+    };
+  }, [lang]);
 
   const setLang = useCallback((newLang: AdminLang) => {
     setLangState(newLang);

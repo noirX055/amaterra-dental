@@ -155,7 +155,18 @@ export default function AdminNotifications({
           return;
         }
 
+        // Check if this appointment was created from the admin panel
+        const adminCreatedRaw = sessionStorage.getItem("admin-created-ids");
+        const adminCreatedIds: string[] = adminCreatedRaw ? JSON.parse(adminCreatedRaw) : [];
+        const isAdminCreated = adminCreatedIds.includes(latest.id);
+
+        // Always update the tracked ID
         setLatestAppointmentId(latest.id);
+
+        // Skip notification for admin-created records
+        if (isAdminCreated) {
+          return;
+        }
 
         const message = `Новая запись: ${latest.firstName} ${latest.lastName}`;
         setToastMessage(message);
@@ -190,8 +201,13 @@ export default function AdminNotifications({
     <>
       <div className="fixed bottom-5 right-5 z-50 flex max-w-sm flex-col items-end gap-3">
         {toastMessage ? (
-          <div className="rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-sm text-slate-700 shadow-[0_18px_45px_rgba(15,23,42,0.12)]">
-            {toastMessage}
+          <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-[0_8px_32px_rgba(15,23,42,0.18)] ring-1 ring-black/5">
+            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </span>
+            <p className="leading-5">{toastMessage}</p>
           </div>
         ) : null}
       </div>
