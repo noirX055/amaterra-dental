@@ -139,11 +139,8 @@ export default function AdminPatientsClient({
           <div className="py-16 text-center text-sm text-slate-400">{t("patients.empty")}</div>
         ) : (
           <div className="mt-6 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/40">
-            <div className="hidden grid-cols-[2fr_1.5fr_1fr_1fr_auto] gap-4 border-b border-slate-700 px-4 py-3 text-xs uppercase tracking-[0.12em] text-slate-500 md:grid">
+            <div className="hidden grid-cols-[1fr_auto] gap-4 border-b border-slate-700 px-4 py-3 text-xs uppercase tracking-[0.12em] text-slate-500 md:grid">
               <p>{t("patients.name")}</p>
-              <p>{t("patients.contact")}</p>
-              <p>{t("patients.lastVisit")}</p>
-              <p>{t("patients.history")}</p>
               <p className="text-right">{t("patients.actions")}</p>
             </div>
             {filteredPatients.map((patient) => {
@@ -156,19 +153,14 @@ export default function AdminPatientsClient({
                   isExpanded ? "bg-slate-900/30" : ""
                 }`}
               >
-                <div className="grid gap-3 px-4 py-4 md:grid-cols-[2fr_1.5fr_1fr_1fr_auto] md:items-center md:gap-4">
+                <div className="flex items-center justify-between px-4 py-4">
                   <div>
                     <p className="font-semibold text-white">
                       {patient.first_name} {patient.last_name}
                     </p>
-                    <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{t("patients.lang")}: {patient.lang}</p>
+                    <p className="text-sm text-slate-300">{patient.phone}</p>
                   </div>
-                  <p className="text-sm text-slate-300">
-                    {patient.email ?? t("patients.noEmail")} - {patient.phone}
-                  </p>
-                  <p className="text-sm text-slate-200">{formatDate(patient.appointments[0].preferred_date)}</p>
-                  <p className="text-sm text-slate-200">{patient.appointments.length}</p>
-                  <div className="flex justify-start md:justify-end">
+                  <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() =>
@@ -205,51 +197,65 @@ export default function AdminPatientsClient({
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div
-                      className={`bg-slate-950/40 px-4 py-4 transition-all duration-300 ${
-                        isExpanded ? "translate-y-0" : "-translate-y-1"
-                      }`}
-                    >
-                    <p className="mb-3 text-xs uppercase tracking-[0.12em] text-slate-500">
-                      {t("patients.historyDetails")}
-                    </p>
-                    <p className="mb-3 text-sm text-slate-300">
-                      {t("patients.doctor")}:{" "}
-                      <span className="font-semibold text-white">{getDoctorName(patient.appointments[0].doctor_id)}</span>
-                    </p>
-                    <div className="grid gap-3">
-                      {patient.appointments.map((historyItem) => (
-                        <div key={historyItem.id} className="rounded-xl border border-slate-700/80 bg-slate-900/60 p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <div className="text-sm font-medium text-slate-100">
-                                <p className="font-medium text-gray-900 dark:text-white">
-                                  {formatDate(historyItem.preferred_date)}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                  {t("appointments.time")}: {historyItem.preferred_time ?? t("appointments.notSpecified")}
-                                </p>
-                            </div>
-                            <span
-                              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[historyItem.status]}`}
-                            >
-                              {statusLabels[historyItem.status]}
-                            </span>
-                          </div>
-                          <p className="mt-2 text-xs text-slate-500">
-                            {t("appointments.created")}: {formatDateTime(historyItem.created_at)}
-                          </p>
-                          <p className="mt-2 text-sm text-slate-300">
-                            {historyItem.notes ?? t("appointments.noNotes")}
-                          </p>
-                          {historyItem.admin_comment ? (
-                            <p className="mt-2 text-sm text-slate-400">
-                              {t("appointments.adminComment")}: {historyItem.admin_comment}
-                            </p>
-                          ) : null}
+                    <div className="bg-slate-900/50 p-4 sm:p-6">
+                      
+                      {/* Detailed info */}
+                      <div className="mb-6 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+                        <div>
+                          <p className="text-xs uppercase tracking-wider text-slate-500">Email</p>
+                          <p className="mt-1 font-medium text-slate-200">{patient.email ?? t("patients.noEmail")}</p>
                         </div>
-                      ))}
+                        <div>
+                          <p className="text-xs uppercase tracking-wider text-slate-500">{t("patients.lang")}</p>
+                          <p className="mt-1 font-medium text-slate-200 uppercase">{patient.lang}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-wider text-slate-500">{t("patients.history")}</p>
+                          <p className="mt-1 font-medium text-slate-200">{patient.appointments.length}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-wider text-slate-500">{t("patients.lastVisit")}</p>
+                          <p className="mt-1 font-medium text-slate-200">{formatDate(patient.appointments[0].preferred_date)}</p>
+                        </div>
+                      </div>
+
+                      <h4 className="mb-4 font-medium text-emerald-400">{t("patients.historyTitle")}</h4>
+                      <div className="grid gap-3">
+                        {patient.appointments.map((historyItem) => (
+                          <div key={historyItem.id} className="rounded-xl border border-slate-700/80 bg-slate-900/60 p-3">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="text-sm font-medium text-slate-100">
+                                  <p className="font-medium text-gray-900 dark:text-white">
+                                    {formatDate(historyItem.preferred_date)}
+                                  </p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {t("appointments.time")}: {historyItem.preferred_time ?? t("appointments.notSpecified")}
+                                  </p>
+                              </div>
+                              <span
+                                className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[historyItem.status]}`}
+                              >
+                                {t(`status.${historyItem.status}`)}
+                              </span>
+                            </div>
+                            <p className="mt-2 text-xs text-slate-500">
+                              {t("appointments.created")}: {formatDateTime(historyItem.created_at)}
+                            </p>
+                            <p className="mt-2 text-sm text-slate-300">
+                              {t("patients.doctor")}: <span className="font-semibold text-white">{getDoctorName(historyItem.doctor_id)}</span>
+                            </p>
+                            <p className="mt-2 text-sm text-slate-300">
+                              {historyItem.notes ?? t("appointments.noNotes")}
+                            </p>
+                            {historyItem.admin_comment ? (
+                              <p className="mt-2 text-sm text-slate-400">
+                                {t("appointments.adminComment")}: {historyItem.admin_comment}
+                              </p>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </div>
               </div>

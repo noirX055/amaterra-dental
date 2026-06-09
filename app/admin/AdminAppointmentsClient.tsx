@@ -268,7 +268,7 @@ export default function AdminAppointmentsClient({
                   <span
                     className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[appointment.status]}`}
                   >
-                    {statusLabels[appointment.status]}
+                    {t(`status.${appointment.status}`)}
                   </span>
                 </div>
 
