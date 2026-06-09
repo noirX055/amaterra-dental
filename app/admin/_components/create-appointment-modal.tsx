@@ -349,13 +349,12 @@ export function CreateAppointmentModal({
 
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t("modal.doctor")} <span className="text-red-500">*</span>
+                  {t("modal.doctor")}
                 </span>
                 <select
                   name="doctor"
                   value={selectedDoctor}
                   onChange={(e) => setSelectedDoctor(e.target.value)}
-                  required
                   className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 >
                   <option value="">{t("modal.selectDoctor")}</option>
@@ -372,13 +371,13 @@ export function CreateAppointmentModal({
                 </span>
                 <select
                   name="preferredTime"
-                  disabled={!selectedDate || !selectedDoctor || isLoadingSlots}
+                  disabled={!selectedDate || isLoadingSlots}
                   required
                   className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition disabled:opacity-60 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 >
                   <option value="">
-                    {!selectedDate || !selectedDoctor 
-                      ? "Сначала выберите дату и врача" 
+                    {!selectedDate
+                      ? "Сначала выберите дату" 
                       : isLoadingSlots 
                         ? "Загрузка..." 
                         : "Выберите время"}

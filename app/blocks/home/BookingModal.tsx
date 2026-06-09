@@ -212,9 +212,8 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
               value={selectedDoctor}
               onChange={(e) => setSelectedDoctor(e.target.value)}
               className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
-              required
             >
-              <option value="">Выберите врача</option>
+              <option value="">Без врача (выберут в клинике)</option>
               <option value="d1">Ruslan Ceban - Медик-генералист</option>
               <option value="d2">Sorin Rabac - Терапевт-протезист</option>
               <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>
@@ -222,13 +221,13 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
             </select>
             <select
               name="preferredTime"
-              disabled={!selectedDate || !selectedDoctor || isLoadingSlots}
+              disabled={!selectedDate || isLoadingSlots}
               className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors disabled:opacity-60 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
               required
             >
               <option value="">
-                {!selectedDate || !selectedDoctor 
-                  ? "Сначала выберите дату и врача" 
+                {!selectedDate
+                  ? "Сначала выберите дату" 
                   : isLoadingSlots 
                     ? "Загрузка..." 
                     : "Выберите время"}
