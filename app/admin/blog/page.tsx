@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { BlogPost } from "@/types/blog";
 import { blogService } from "@/services/blogService";
+import { useAdminLang } from "../_components/admin-lang-context";
 
 export default function AdminBlogPage() {
+  const { t } = useAdminLang();
   const router = useRouter();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +30,7 @@ export default function AdminBlogPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Вы уверены, что хотите удалить эту статью?")) return;
+    if (!confirm(t("blog.deleteConfirm"))) return;
 
     try {
       await blogService.deletePost(id);
@@ -78,12 +80,12 @@ export default function AdminBlogPage() {
 
   return (
     <div className="min-h-screen text-slate-100">
-      <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
+      <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-4 sm:p-6 lg:p-8 shadow-[0_24px_60px_rgba(2,6,23,0.6)]">
         {/* Header */}
         <header className="border-b border-slate-800/80 pb-6">
-          <p className="text-sm font-medium text-emerald-400">Управление контентом</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            Блог
+          <p className="text-sm font-medium text-emerald-400">{t("blog.management")}</p>
+          <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+            {t("blog.title")}
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
             Создавайте и редактируйте статьи для блога. Публикуйте новости и полезную информацию для пациентов
@@ -115,12 +117,12 @@ export default function AdminBlogPage() {
 
             <Link
               href="/admin/blog/new"
-              className="flex h-11 items-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition hover:bg-emerald-500"
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition hover:bg-emerald-500 shrink-0"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Создать статью
+              {t("blog.newArticle")}
             </Link>
           </div>
 
@@ -138,10 +140,7 @@ export default function AdminBlogPage() {
               </svg>
             </div>
             <p className="text-lg font-medium text-slate-300">
-              {query ? "Статьи не найдены" : "Статей пока нет"}
-            </p>
-            <p className="mt-2 text-sm text-slate-400">
-              {query ? "Попробуйте изменить поисковый запрос" : "Создайте первую статью для блога"}
+              {t("blog.noArticles")}
             </p>
             {!query && (
               <Link
@@ -151,7 +150,7 @@ export default function AdminBlogPage() {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                Создать первую статью
+                {t("blog.newArticle")}
               </Link>
             )}
           </div>
@@ -162,10 +161,10 @@ export default function AdminBlogPage() {
                 key={post.id}
                 className="rounded-[24px] border border-slate-700 bg-slate-900/50 p-5 shadow-[0_12px_28px_rgba(2,6,23,0.4)] transition hover:border-slate-600"
               >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                   {/* Image */}
                   {post.image_url && (
-                    <div className="h-24 w-full flex-shrink-0 overflow-hidden rounded-xl lg:w-32">
+                    <div className="h-40 sm:h-24 w-full flex-shrink-0 overflow-hidden rounded-xl sm:w-32">
                       <img
                         src={post.image_url}
                         alt=""
@@ -193,7 +192,7 @@ export default function AdminBlogPage() {
                             : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                         }`}
                       >
-                        {post.published ? "Опубликовано" : "Черновик"}
+                        {post.published ? t("blog.published") : t("blog.draft")}
                       </button>
                     </div>
 
@@ -217,25 +216,25 @@ export default function AdminBlogPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex flex-wrap items-center gap-2 lg:flex-col lg:items-end">
+                  <div className="mt-4 sm:mt-0 flex flex-wrap items-center gap-2 sm:flex-col sm:items-end">
                     {post.published && (
                       <Link
                         href={`/blog/${post.slug}`}
                         target="_blank"
-                        className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-700"
+                        className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-200 transition hover:bg-slate-700"
                       >
                         Просмотр
                       </Link>
                     )}
                     <Link
                       href={`/admin/blog/${post.id}`}
-                      className="rounded-lg border border-emerald-600 bg-emerald-600/10 px-3 py-2 text-sm font-medium text-emerald-400 transition hover:bg-emerald-600/20"
+                      className="rounded-lg border border-emerald-600 bg-emerald-600/10 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-emerald-400 transition hover:bg-emerald-600/20"
                     >
                       Редактировать
                     </Link>
                     <button
                       onClick={() => handleDelete(post.id)}
-                      className="rounded-lg border border-red-600 bg-red-600/10 px-3 py-2 text-sm font-medium text-red-400 transition hover:bg-red-600/20"
+                      className="rounded-lg border border-red-600 bg-red-600/10 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-400 transition hover:bg-red-600/20"
                     >
                       Удалить
                     </button>

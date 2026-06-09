@@ -3,8 +3,10 @@
 import { useEffect, useState, useRef } from "react";
 import { chatService } from "@/services/chatService";
 import type { ChatConversationWithLastMessage, ChatMessage } from "@/types/chat";
+import { useAdminLang } from "../_components/admin-lang-context";
 
 export default function AdminChatPage() {
+  const { t } = useAdminLang();
   const [conversations, setConversations] = useState<ChatConversationWithLastMessage[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -94,7 +96,7 @@ export default function AdminChatPage() {
   }
 
   async function closeConversation(id: string) {
-    if (!confirm("Закрыть диалог?")) return;
+    if (!confirm(t("chat.closeConfirm"))) return;
 
     try {
       await chatService.closeConversation(id);
@@ -146,20 +148,20 @@ export default function AdminChatPage() {
 
   return (
     <div className="flex h-screen flex-col text-slate-100">
-      <div className="flex flex-1 overflow-hidden rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] shadow-[0_24px_60px_rgba(2,6,23,0.6)]">
+      <div className="flex flex-1 overflow-hidden rounded-2xl md:rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] shadow-[0_24px_60px_rgba(2,6,23,0.6)]">
         {/* Conversations List */}
-        <div className="flex w-80 flex-col border-r border-slate-800">
+        <div className={`${selectedConversation ? "hidden md:flex" : "flex"} w-full md:w-80 flex-col border-r border-slate-800`}>
           {/* Header */}
-          <div className="border-b border-slate-800/80 p-6">
-            <p className="text-sm font-medium text-emerald-400">Поддержка клиентов</p>
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">Чат</h1>
+          <div className="border-b border-slate-800/80 p-4 sm:p-6">
+            <p className="text-sm font-medium text-emerald-400">{t("chat.support")}</p>
+            <h1 className="mt-2 text-xl sm:text-2xl font-semibold tracking-tight text-white">{t("chat.title")}</h1>
           </div>
 
           {/* Conversations */}
           <div className="flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
               <div className="p-6 text-center text-sm text-slate-400">
-                Нет активных диалогов
+                {t("chat.noConversations")}
               </div>
             ) : (
               conversations.map((conv) => (
@@ -186,13 +188,13 @@ export default function AdminChatPage() {
                         </p>
                       )}
                     </div>
-                    <span className="ml-2 text-xs text-slate-500">
+                    <span className="ml-2 text-xs text-slate-500 whitespace-nowrap">
                       {formatDate(conv.last_message_at)}
                     </span>
                   </div>
                   {conv.status === "closed" && (
                     <span className="mt-2 inline-block rounded-full bg-slate-700 px-2 py-0.5 text-xs text-slate-300">
-                      Закрыт
+                      {t("chat.closed")}
                     </span>
                   )}
                 </button>
@@ -203,24 +205,35 @@ export default function AdminChatPage() {
 
         {/* Chat Area */}
         {selectedConversation ? (
-          <div className="flex flex-1 flex-col">
+          <div className={`flex flex-1 flex-col ${!selectedConversation ? "hidden md:flex" : "flex"}`}>
             {/* Chat Header */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 p-6">
-              <div>
-                <h2 className="text-lg font-semibold text-white">
-                  {conversations.find((c) => c.id === selectedConversation)?.client_name}
-                </h2>
-                {conversations.find((c) => c.id === selectedConversation)?.client_email && (
-                  <p className="text-sm text-slate-400">
-                    {conversations.find((c) => c.id === selectedConversation)?.client_email}
-                  </p>
-                )}
+            <div className="flex items-center justify-between border-b border-slate-800/80 p-4 sm:p-6">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setSelectedConversation(null)}
+                  className="md:hidden -ml-2 rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white"
+                  title={t("chat.back")}
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <div>
+                  <h2 className="text-base sm:text-lg font-semibold text-white truncate max-w-[200px] sm:max-w-xs">
+                    {conversations.find((c) => c.id === selectedConversation)?.client_name}
+                  </h2>
+                  {conversations.find((c) => c.id === selectedConversation)?.client_email && (
+                    <p className="text-xs sm:text-sm text-slate-400 truncate max-w-[200px] sm:max-w-xs">
+                      {conversations.find((c) => c.id === selectedConversation)?.client_email}
+                    </p>
+                  )}
+                </div>
               </div>
               <button
                 onClick={() => closeConversation(selectedConversation)}
-                className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-700"
+                className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-slate-200 transition hover:bg-slate-700"
               >
-                Закрыть диалог
+                {t("chat.closeConv")}
               </button>
             </div>
 
@@ -255,37 +268,40 @@ export default function AdminChatPage() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-slate-800/80 p-6">
-              <div className="flex gap-3">
+            <div className="border-t border-slate-800/80 p-4 sm:p-6 bg-slate-900/50">
+              <div className="flex gap-2 sm:gap-3">
                 <input
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Введите сообщение..."
-                  className="flex-1 rounded-xl border border-slate-700 bg-slate-950/60 px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
+                  placeholder={t("chat.placeholder")}
+                  className="flex-1 min-w-0 rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 sm:px-4 sm:py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!newMessage.trim() || isSending}
-                  className="rounded-xl bg-emerald-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-xl bg-emerald-600 px-4 py-2 sm:px-6 sm:py-3 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                 >
-                  Отправить
+                  <span className="hidden sm:inline">{t("chat.send")}</span>
+                  <svg className="sm:hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
                 </button>
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex flex-1 items-center justify-center">
+          <div className="hidden md:flex flex-1 items-center justify-center">
             <div className="text-center">
               <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-800 mx-auto">
                 <svg className="h-8 w-8 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
-              <p className="text-lg font-medium text-slate-300">Выберите диалог</p>
+              <p className="text-lg font-medium text-slate-300">{t("chat.selectConv")}</p>
               <p className="mt-2 text-sm text-slate-400">
-                Выберите диалог из списка слева для начала общения
+                {t("chat.selectConvDesc")}
               </p>
             </div>
           </div>

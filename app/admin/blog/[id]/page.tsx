@@ -6,8 +6,10 @@ import type { BlogPost, BlogPostCreate, Lang } from "@/types/blog";
 import { blogService } from "@/services/blogService";
 import { uploadBlogImage } from "@/lib/uploadImage";
 import { LANG_STORAGE_KEY } from "@/app/blocks/home/i18n";
+import { useAdminLang } from "../../_components/admin-lang-context";
 
 export default function AdminBlogEditPage() {
+  const { t } = useAdminLang();
   const router = useRouter();
   const params = useParams();
   const postId = params.id as string | undefined;
@@ -66,7 +68,7 @@ export default function AdminBlogEditPage() {
       setAdminLang(post.source_lang);
     } catch (error) {
       console.error("Failed to load post:", error);
-      alert("Ошибка при загрузке статьи");
+      alert(t("blog.loadError"));
       router.push("/admin/blog");
     } finally {
       setIsLoading(false);
@@ -107,7 +109,7 @@ export default function AdminBlogEditPage() {
 
   async function handleImageUpload(file: File) {
     if (!file.type.startsWith("image/")) {
-      alert("Пожалуйста, выберите изображение");
+      alert(t("blog.selectImageMsg"));
       return;
     }
 
@@ -117,7 +119,7 @@ export default function AdminBlogEditPage() {
       handleChange("image_url", url);
     } catch (error) {
       console.error("Upload error:", error);
-      alert(error instanceof Error ? error.message : "Ошибка загрузки изображения");
+      alert(error instanceof Error ? error.message : t("blog.uploadError"));
     } finally {
       setIsUploading(false);
     }
@@ -153,17 +155,17 @@ export default function AdminBlogEditPage() {
     e.preventDefault();
 
     if (!formData.title) {
-      alert("Заполните заголовок");
+      alert(t("blog.fillTitle"));
       return;
     }
 
     if (!formData.slug) {
-      alert("Укажите slug");
+      alert(t("blog.fillSlug"));
       return;
     }
 
     if (!formData.content) {
-      alert("Заполните контент");
+      alert(t("blog.fillContent"));
       return;
     }
 
@@ -178,7 +180,7 @@ export default function AdminBlogEditPage() {
       router.push("/admin/blog");
     } catch (error) {
       console.error("Failed to save post:", error);
-      alert("Ошибка при сохранении статьи");
+      alert(t("blog.saveError"));
     } finally {
       setIsSaving(false);
     }
@@ -194,15 +196,15 @@ export default function AdminBlogEditPage() {
 
   return (
     <div className="min-h-screen text-slate-100">
-      <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-6 shadow-[0_24px_60px_rgba(2,6,23,0.6)] sm:p-8">
+      <div className="rounded-[28px] border border-slate-800 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#0b1220] p-4 sm:p-6 lg:p-8 shadow-[0_24px_60px_rgba(2,6,23,0.6)]">
         {/* Header */}
         <header className="border-b border-slate-800/80 pb-6">
-          <p className="text-sm font-medium text-emerald-400">Управление контентом</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-            {isNew ? "Создать статью" : "Редактировать статью"}
+          <p className="text-sm font-medium text-emerald-400">{t("blog.management")}</p>
+          <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+            {isNew ? t("blog.createArticle") : t("blog.editArticle")}
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            Заполните заголовок, краткое описание и основной текст на трех языках. Изображение можно загрузить или перетащить в форму.
+            {t("blog.formDesc")}
           </p>
         </header>
 
@@ -223,9 +225,9 @@ export default function AdminBlogEditPage() {
           </div>
 
           {/* Image Upload */}
-          <div className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-5">
+          <div className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-4 sm:p-5">
             <label className="mb-2 block text-sm font-medium text-white">
-              Изображение статьи
+              {t("blog.imageTitle")}
             </label>
 
             {/* Drag & Drop Zone */}
@@ -255,14 +257,14 @@ export default function AdminBlogEditPage() {
                         className="hidden"
                         disabled={isUploading}
                       />
-                      Заменить
+                      {t("blog.replaceImage")}
                     </label>
                     <button
                       type="button"
                       onClick={() => handleChange("image_url", "")}
-                      className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                      className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 mt-2 sm:mt-0"
                     >
-                      Удалить
+                      {t("blog.deleteImage")}
                     </button>
                   </div>
                 </div>
@@ -296,13 +298,13 @@ export default function AdminBlogEditPage() {
                         />
                       </svg>
                       <p className="mb-2 text-sm font-medium text-white">
-                        Перетащите изображение сюда
+                        {t("blog.dragImage")}
                       </p>
                       <p className="text-xs text-slate-400">
-                        или нажмите для выбора файла
+                        {t("blog.clickImage")}
                       </p>
                       <p className="mt-2 text-xs text-slate-500">
-                        PNG, JPG, WEBP до 5MB
+                        PNG, JPG, WEBP
                       </p>
                     </>
                   )}
@@ -396,26 +398,26 @@ export default function AdminBlogEditPage() {
                 className="h-5 w-5 rounded border-slate-700 bg-slate-950/60 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-slate-900"
               />
               <span className="text-sm font-medium text-white">
-                Опубликовать статью
+                {t("blog.publishArticle")}
               </span>
             </label>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 border-t border-slate-800/80 pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-800/80 pt-6">
             <button
               type="button"
               onClick={() => router.push("/admin/blog")}
-              className="rounded-xl border border-slate-700 bg-slate-800 px-5 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-700"
+              className="w-full sm:w-auto rounded-xl border border-slate-700 bg-slate-800 px-5 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-700"
             >
-              Отмена
+              {t("blog.cancel")}
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSaving ? "Сохранение..." : "Сохранить"}
+              {isSaving ? t("blog.saving") : t("blog.save")}
             </button>
           </div>
         </form>
