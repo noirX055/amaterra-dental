@@ -13,7 +13,6 @@ type AdminPatientsClientProps = {
 const doctors = [
   { id: "d1", name: "Ruslan Ceban" },
   { id: "d2", name: "Sorin Rabac" },
-  { id: "d3", name: "Alexandra Ursu" },
   { id: "d4", name: "Dumitru Gurenco" },
   { id: "d5", name: "Natalia Lozova" },
 ];

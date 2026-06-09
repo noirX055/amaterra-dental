@@ -97,14 +97,14 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="animate-modal-fade fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm sm:p-6">
+    <div className="animate-modal-fade fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm sm:items-center sm:p-6">
       {/* Click outside to close */}
       <div className="absolute inset-0" onClick={onClose} />
 
       <div
         role="dialog"
         aria-modal="true"
-        className="animate-modal-slide relative flex w-full max-w-md flex-col overflow-hidden rounded-[28px] bg-white text-zinc-900 shadow-2xl"
+        className="animate-modal-slide relative flex w-full max-w-md flex-col overflow-hidden rounded-t-[28px] bg-white text-zinc-900 shadow-2xl sm:rounded-[28px] max-h-[92dvh] sm:max-h-[90vh]"
       >
         {showSuccessPopup ? (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/95 px-6 text-center">
@@ -134,24 +134,24 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
           </button>
         </div>
 
-        <div className="px-6 py-6 sm:px-8 sm:py-8">
-          <p className="mb-6 text-sm leading-relaxed text-zinc-500">
+        <div className="overflow-y-auto px-5 py-5 sm:px-8 sm:py-8">
+          <p className="mb-4 text-sm leading-relaxed text-zinc-500">
             {t.modalSubtitle}
           </p>
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-4 sm:flex-row">
+          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-3 sm:flex-row">
               <input
                 name="lastName"
                 type="text"
                 placeholder={t.modalLastName}
-                className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+                className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
                 required
               />
               <input
                 name="firstName"
                 type="text"
                 placeholder={t.modalFirstName}
-                className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+                className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
                 required
               />
             </div>
@@ -160,7 +160,7 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
               name="phone"
               type="tel"
               placeholder={t.modalPhone}
-              className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+              className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
               required
             />
 
@@ -168,14 +168,14 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
               name="email"
               type="email"
               placeholder={t.modalEmail}
-              className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+              className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
             />
 
             <div className="relative">
               <input
                 name="preferredDate"
                 type="date"
-                className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+                className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
                 required
               />
               {/* Optional visually hidden label or fake placeholder logic could go here */}
@@ -183,24 +183,23 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
             <input
               name="preferredTime"
               type="time"
-              className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+              className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
             />
             <select
               name="doctor"
-              className="h-13 w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white"
+              className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
             >
               <option value="">Выберите врача</option>
               <option value="d1">Ruslan Ceban - Медик-генералист</option>
               <option value="d2">Sorin Rabac - Терапевт-протезист</option>
-              <option value="d3">Alexandra Ursu - Терапевт</option>
               <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>
               <option value="d5">Natalia Lozova - Ортодонт</option>
             </select>
             <textarea
               name="notes"
               placeholder="Комментарий к записи"
-              rows={3}
-              className="w-full rounded-[18px] border border-zinc-200 bg-zinc-50 px-5 py-3 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white"
+              rows={2}
+              className="w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:rounded-[18px] sm:px-5 sm:py-3 sm:rows-3"
             />
             {submitMessage ? (
               <p className="text-sm text-zinc-600" role="status">
@@ -208,7 +207,7 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
               </p>
             ) : null}
 
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <button
                 type="button"
                 onClick={onClose}

@@ -331,7 +331,6 @@ export function CreateAppointmentModal({
                 <option value="">{t("modal.selectDoctor")}</option>
                 <option value="d1">Ruslan Ceban - Медик-генералист</option>
                 <option value="d2">Sorin Rabac - Терапевт-протезист</option>
-                <option value="d3">Alexandra Ursu - Терапевт</option>
                 <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>
                 <option value="d5">Natalia Lozova - Ортодонт</option>
               </select>

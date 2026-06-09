@@ -16,7 +16,6 @@ type AdminDoctorsClientProps = {
 const doctors = [
   { id: "d1", name: "Ruslan Ceban", specialty: "Медик-генералист", avatar: "RC", color: "from-blue-500 to-blue-600" },
   { id: "d2", name: "Sorin Rabac", specialty: "Терапевт-протезист", avatar: "SR", color: "from-emerald-500 to-emerald-600" },
-  { id: "d3", name: "Alexandra Ursu", specialty: "Терапевт", avatar: "AU", color: "from-purple-500 to-purple-600" },
   { id: "d4", name: "Dumitru Gurenco", specialty: "Терапевт-протезист", avatar: "DG", color: "from-amber-500 to-amber-600" },
   { id: "d5", name: "Natalia Lozova", specialty: "Ортодонт", avatar: "NL", color: "from-rose-500 to-rose-600" },
 ];

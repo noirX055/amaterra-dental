@@ -239,7 +239,6 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctors: [
       { name: "Ruslan Ceban", specialty: "Медик-генералист", image: "/ruslan-ceban.webp" },
       { name: "Sorin Rabac", specialty: "Терапевт-протезист", image: "/sorin-robac.jpg" },
-      { name: "Alexandra Ursu", specialty: "Терапевт", image: "/alexandra.JPG" },
       { name: "Dumitru Gurenco", specialty: "Терапевт-протезист", image: "/dumitru.JPG" },
       { name: "Natalia Lozova", specialty: "Ортодонт", image: "/natalialozov.webp" }
     ],
@@ -508,7 +507,6 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctors: [
       { name: "Ruslan Ceban", specialty: "Medic Generalist", image: "/ruslan-ceban.webp" },
       { name: "Sorin Rabac", specialty: "Terapeut Protezist", image: "/sorin-robac.jpg" },
-      { name: "Alexandra Ursu", specialty: "Terapeut", image: "/alexandra.JPG" },
       { name: "Dumitru Gurenco", specialty: "Terapeut-protetician", image: "/dumitru.JPG" },
       { name: "Natalia Lozova", specialty: "Ortodont", image: "/natalialozov.webp" }
     ],
@@ -777,7 +775,6 @@ export const I18N: Record<Lang, HomeI18n> = {
     ourDoctors: [
       { name: "Ruslan Ceban", specialty: "General Practitioner", image: "/ruslan-ceban.webp" },
       { name: "Sorin Rabac", specialty: "Therapist Prosthetist", image: "/sorin-robac.jpg" },
-      { name: "Alexandra Ursu", specialty: "Therapist", image: "/alexandra.JPG" },
       { name: "Dumitru Gurenco", specialty: "Therapist-Prosthodontist", image: "/dumitru.JPG" },
       { name: "Natalia Lozova", specialty: "Orthodontist", image: "/natalialozov.webp" }
     ],
