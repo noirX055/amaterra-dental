@@ -67,6 +67,7 @@ type UpdateAppointmentPayload = {
   adminComment?: string | null;
   preferredDate?: string | null;
   preferredTime?: string | null;
+  doctorId?: string | null;
 };
 
 export async function PATCH(request: Request) {
@@ -91,6 +92,7 @@ export async function PATCH(request: Request) {
   const adminComment = body.adminComment?.trim() ?? null;
   const preferredDate = (body.preferredDate ?? "").trim() || null;
   const preferredTime = (body.preferredTime ?? "").trim() || null;
+  const doctorId = (body.doctorId ?? "").trim() || null;
 
   if (!id) {
     return NextResponse.json({ error: "Appointment id is required" }, { status: 400 });
@@ -107,6 +109,7 @@ export async function PATCH(request: Request) {
   };
   if (preferredDate) updatePayload.preferred_date = preferredDate;
   if (preferredTime !== undefined) updatePayload.preferred_time = preferredTime;
+  if (doctorId !== undefined) updatePayload.doctor_id = doctorId;
 
   const { error } = await adminSupabase
     .from("appointments")

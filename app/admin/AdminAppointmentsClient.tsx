@@ -37,6 +37,7 @@ export default function AdminAppointmentsClient({
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [dateDrafts, setDateDrafts] = useState<Record<string, string>>({});
   const [timeDrafts, setTimeDrafts] = useState<Record<string, string>>({});
+  const [doctorDrafts, setDoctorDrafts] = useState<Record<string, string>>({});
   const [savingIds, setSavingIds] = useState<Record<string, boolean>>({});
   const [saveErrors, setSaveErrors] = useState<Record<string, string | null>>({});
   const [showHistory, setShowHistory] = useState(false);
@@ -82,6 +83,16 @@ export default function AdminAppointmentsClient({
       }
       return next;
     });
+
+    setDoctorDrafts((prev) => {
+      const next = { ...prev };
+      for (const appointment of appointments) {
+        if (next[appointment.id] === undefined) {
+          next[appointment.id] = appointment.doctor_id ?? "";
+        }
+      }
+      return next;
+    });
   }, [appointments]);
 
   async function saveAppointment(appointment: Appointment) {
@@ -90,6 +101,7 @@ export default function AdminAppointmentsClient({
     const adminComment = (commentDrafts[appointmentId] ?? "").trim();
     const preferredDate = dateDrafts[appointmentId] ?? appointment.preferred_date;
     const preferredTime = timeDrafts[appointmentId] ?? appointment.preferred_time ?? "";
+    const doctorId = doctorDrafts[appointmentId] ?? appointment.doctor_id ?? "";
 
     setSavingIds((prev) => ({ ...prev, [appointmentId]: true }));
     setSaveErrors((prev) => ({ ...prev, [appointmentId]: null }));
@@ -104,6 +116,7 @@ export default function AdminAppointmentsClient({
           adminComment,
           preferredDate,
           preferredTime: preferredTime || null,
+          doctorId: doctorId || null,
         }),
       });
 
@@ -332,25 +345,46 @@ export default function AdminAppointmentsClient({
                           </label>
                         </div>
 
-                        {/* Status */}
-                        <label className="grid gap-2">
-                          <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
-                          <select
-                            value={statusDrafts[appointment.id] ?? appointment.status}
-                            onChange={(event) =>
-                              setStatusDrafts((prev) => ({
-                                ...prev,
-                                [appointment.id]: event.target.value as Appointment["status"],
-                              }))
-                            }
-                            className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
-                          >
-                            <option value="pending">{t("status.pending")}</option>
-                            <option value="confirmed">{t("status.confirmed")}</option>
-                            <option value="cancelled">{t("status.cancelled")}</option>
-                            <option value="completed">{t("status.completed")}</option>
-                          </select>
-                        </label>
+                        {/* Status & Doctor */}
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <label className="grid gap-2">
+                            <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("appointments.status")}</span>
+                            <select
+                              value={statusDrafts[appointment.id] ?? appointment.status}
+                              onChange={(event) =>
+                                setStatusDrafts((prev) => ({
+                                  ...prev,
+                                  [appointment.id]: event.target.value as Appointment["status"],
+                                }))
+                              }
+                              className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                            >
+                              <option value="pending">{t("status.pending")}</option>
+                              <option value="confirmed">{t("status.confirmed")}</option>
+                              <option value="cancelled">{t("status.cancelled")}</option>
+                              <option value="completed">{t("status.completed")}</option>
+                            </select>
+                          </label>
+
+                          <label className="grid gap-2">
+                            <span className="text-xs uppercase tracking-[0.12em] text-slate-400">{t("patients.doctor")}</span>
+                            <select
+                              value={doctorDrafts[appointment.id] ?? appointment.doctor_id ?? ""}
+                              onChange={(event) =>
+                                setDoctorDrafts((prev) => ({
+                                  ...prev,
+                                  [appointment.id]: event.target.value,
+                                }))
+                              }
+                              className="h-10 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-500"
+                            >
+                              <option value="">Без врача</option>
+                              {Object.entries(DOCTORS).map(([id, name]) => (
+                                <option key={id} value={id}>{name}</option>
+                              ))}
+                            </select>
+                          </label>
+                        </div>
 
                         {/* Comment */}
                         <label className="grid gap-2">
