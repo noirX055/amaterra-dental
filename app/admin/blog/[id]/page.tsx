@@ -210,19 +210,7 @@ export default function AdminBlogEditPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Language Indicator */}
-          <div className="rounded-[24px] border border-emerald-700/50 bg-emerald-900/20 p-4">
-            <p className="text-sm text-emerald-300">
-              {adminLang === "ru" && "Вы пишете статью на русском языке"}
-              {adminLang === "ro" && "Scrieți articolul în limba română"}
-              {adminLang === "en" && "You are writing the article in English"}
-            </p>
-            <p className="mt-1 text-xs text-slate-400">
-              {adminLang === "ru" && "Читатели смогут выбрать язык на сайте, статья будет автоматически переведена"}
-              {adminLang === "ro" && "Cititorii vor putea alege limba pe site, articolul va fi tradus automat"}
-              {adminLang === "en" && "Readers will be able to choose the language on the site, the article will be automatically translated"}
-            </p>
-          </div>
+
 
           {/* Image Upload */}
           <div className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-4 sm:p-5">
@@ -316,9 +304,7 @@ export default function AdminBlogEditPage() {
           {/* Title */}
           <div className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-5">
             <h3 className="mb-4 text-lg font-medium text-white">
-              {adminLang === "ru" && "Заголовок"}
-              {adminLang === "ro" && "Titlu"}
-              {adminLang === "en" && "Title"}
+              {t("blog.fieldTitle")}
             </h3>
             <input
               type="text"
@@ -343,16 +329,14 @@ export default function AdminBlogEditPage() {
               required
             />
             <p className="mt-2 text-sm text-slate-400">
-              URL статьи: /blog/{formData.slug || "slug"}
+              {t("blog.urlLabel")}: /blog/{formData.slug || "slug"}
             </p>
           </div>
 
           {/* Excerpt */}
           <div className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-5">
             <h3 className="mb-4 text-lg font-medium text-white">
-              {adminLang === "ru" && "Краткое описание"}
-              {adminLang === "ro" && "Descriere scurtă"}
-              {adminLang === "en" && "Short description"}
+              {t("blog.fieldExcerpt")}
             </h3>
             <textarea
               value={formData.excerpt}
@@ -365,14 +349,10 @@ export default function AdminBlogEditPage() {
           {/* Content */}
           <div className="rounded-[24px] border border-slate-700 bg-slate-900/40 p-5">
             <h3 className="mb-4 text-lg font-medium text-white">
-              {adminLang === "ru" && "Основной текст статьи *"}
-              {adminLang === "ro" && "Textul principal al articolului *"}
-              {adminLang === "en" && "Main article text *"}
+              {t("blog.fieldContent")}
             </h3>
             <p className="mb-4 text-sm text-slate-400">
-              {adminLang === "ru" && "Введите текст статьи. Каждый абзац будет автоматически отформатирован."}
-              {adminLang === "ro" && "Introduceți textul articolului. Fiecare paragraf va fi formatat automat."}
-              {adminLang === "en" && "Enter article text. Each paragraph will be automatically formatted."}
+              {t("blog.fieldContentHint")}
             </p>
             <textarea
               value={formData.content}
@@ -380,11 +360,7 @@ export default function AdminBlogEditPage() {
               className="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
               rows={12}
               required
-              placeholder={
-                adminLang === "ru" ? "Введите текст статьи. Разделяйте абзацы пустой строкой." :
-                adminLang === "ro" ? "Introduceți textul articolului. Separați paragrafele cu o linie goală." :
-                "Enter article text. Separate paragraphs with an empty line."
-              }
+              placeholder={t("blog.fieldContentPlaceholder")}
             />
           </div>
 

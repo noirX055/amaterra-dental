@@ -37,7 +37,7 @@ export default function AdminBlogPage() {
       setPosts(posts.filter((p) => p.id !== id));
     } catch (error) {
       console.error("Failed to delete post:", error);
-      alert("Ошибка при удалении статьи");
+      alert(t("blog.deleteError"));
     }
   }
 
@@ -47,7 +47,7 @@ export default function AdminBlogPage() {
       setPosts(posts.map((p) => (p.id === post.id ? updated : p)));
     } catch (error) {
       console.error("Failed to toggle publish:", error);
-      alert("Ошибка при изменении статуса публикации");
+      alert(t("blog.publishError"));
     }
   }
 
@@ -88,7 +88,7 @@ export default function AdminBlogPage() {
             {t("blog.title")}
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">
-            Создавайте и редактируйте статьи для блога. Публикуйте новости и полезную информацию для пациентов
+            {t("blog.desc")}
           </p>
         </header>
 
@@ -110,7 +110,7 @@ export default function AdminBlogPage() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Поиск по заголовку или slug"
+                placeholder={t("blog.search")}
                 className="h-11 w-full rounded-xl border border-slate-700 bg-slate-950/60 pl-11 pr-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
               />
             </label>
@@ -127,7 +127,7 @@ export default function AdminBlogPage() {
           </div>
 
           <p className="mt-3 text-sm text-slate-300">
-            Всего статей: <span className="font-semibold text-white">{filteredPosts.length}</span>
+            {t("blog.total")}: <span className="font-semibold text-white">{filteredPosts.length}</span>
           </p>
         </section>
 
@@ -223,20 +223,20 @@ export default function AdminBlogPage() {
                         target="_blank"
                         className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-200 transition hover:bg-slate-700"
                       >
-                        Просмотр
+                        {t("blog.view")}
                       </Link>
                     )}
                     <Link
                       href={`/admin/blog/${post.id}`}
                       className="rounded-lg border border-emerald-600 bg-emerald-600/10 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-emerald-400 transition hover:bg-emerald-600/20"
                     >
-                      Редактировать
+                      {t("blog.edit")}
                     </Link>
                     <button
                       onClick={() => handleDelete(post.id)}
                       className="rounded-lg border border-red-600 bg-red-600/10 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-400 transition hover:bg-red-600/20"
                     >
-                      Удалить
+                      {t("blog.delete")}
                     </button>
                   </div>
                 </div>

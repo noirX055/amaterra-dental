@@ -17,6 +17,7 @@ export default function AdminChatPage() {
 
   useEffect(() => {
     loadConversations();
+    cleanupOldConversations();
   }, []);
 
   useEffect(() => {
@@ -54,6 +55,20 @@ export default function AdminChatPage() {
     scrollToBottom();
   }, [messages]);
 
+  async function cleanupOldConversations() {
+    try {
+      const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      await supabase
+        .from("chat_conversations")
+        .delete()
+        .lt("created_at", cutoff);
+    } catch (err) {
+      console.error("[chat-cleanup] Failed:", err);
+    }
+  }
+
   async function loadConversations() {
     try {
       const data = await chatService.getAllConversations();
@@ -82,14 +97,14 @@ export default function AdminChatPage() {
       await chatService.sendMessage({
         conversation_id: selectedConversation,
         sender_type: "admin",
-        sender_name: "Администратор",
+        sender_name: t("chat.admin"),
         message: newMessage.trim(),
       });
 
       setNewMessage("");
     } catch (error) {
       console.error("Failed to send message:", error);
-      alert("Ошибка при отправке сообщения");
+      alert(t("chat.sendError"));
     } finally {
       setIsSending(false);
     }
@@ -107,7 +122,7 @@ export default function AdminChatPage() {
       }
     } catch (error) {
       console.error("Failed to close conversation:", error);
-      alert("Ошибка при закрытии диалога");
+      alert(t("chat.closeError"));
     }
   }
 
@@ -130,12 +145,12 @@ export default function AdminChatPage() {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return "только что";
-    if (minutes < 60) return `${minutes} мин назад`;
-    if (hours < 24) return `${hours} ч назад`;
-    if (days < 7) return `${days} дн назад`;
+    if (minutes < 1) return t("chat.justNow");
+    if (minutes < 60) return t("chat.minutesAgo").replace("{n}", String(minutes));
+    if (hours < 24) return t("chat.hoursAgo").replace("{n}", String(hours));
+    if (days < 7) return t("chat.daysAgo").replace("{n}", String(days));
 
-    return date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
+    return date.toLocaleDateString(undefined, { day: "numeric", month: "short" });
   }
 
   if (isLoading) {

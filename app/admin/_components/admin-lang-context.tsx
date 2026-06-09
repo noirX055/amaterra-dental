@@ -175,6 +175,10 @@ const translations: Record<AdminLang, Record<string, string>> = {
     "chat.selectConvDesc": "Выберите диалог из списка для начала общения",
     "chat.back": "Назад",
     "chat.admin": "Администратор",
+    "chat.justNow": "только что",
+    "chat.minutesAgo": "{n} мин назад",
+    "chat.hoursAgo": "{n} ч назад",
+    "chat.daysAgo": "{n} дн назад",
 
     // Blog
     "blog.management": "Управление блогом",
@@ -211,6 +215,20 @@ const translations: Record<AdminLang, Record<string, string>> = {
     "blog.clickImage": "или нажмите для выбора файла",
     "blog.publishArticle": "Опубликовать статью",
     "blog.saving": "Сохранение...",
+    "blog.desc": "Создавайте и редактируйте статьи для блога. Публикуйте новости и полезную информацию для пациентов.",
+    "blog.search": "Поиск по заголовку или slug",
+    "blog.total": "Всего статей",
+    "blog.view": "Просмотр",
+    "blog.edit": "Редактировать",
+    "blog.delete": "Удалить",
+    "blog.deleteError": "Ошибка при удалении статьи",
+    "blog.publishError": "Ошибка при изменении статуса публикации",
+    "blog.fieldTitle": "Заголовок",
+    "blog.fieldExcerpt": "Краткое описание",
+    "blog.fieldContent": "Основной текст статьи *",
+    "blog.fieldContentHint": "Введите текст статьи. Каждый абзац будет автоматически отформатирован.",
+    "blog.fieldContentPlaceholder": "Введите текст статьи. Разделяйте абзацы пустой строкой.",
+    "blog.urlLabel": "URL статьи",
 
     // Quick actions
     "actions.newAppointment": "Новая запись",
@@ -383,6 +401,10 @@ const translations: Record<AdminLang, Record<string, string>> = {
     "chat.selectConvDesc": "Selectați un dialog din listă pentru a începe comunicarea",
     "chat.back": "Înapoi",
     "chat.admin": "Administrator",
+    "chat.justNow": "acum",
+    "chat.minutesAgo": "acum {n} min",
+    "chat.hoursAgo": "acum {n} ore",
+    "chat.daysAgo": "acum {n} zile",
 
     // Blog
     "blog.management": "Gestionare blog",
@@ -419,6 +441,20 @@ const translations: Record<AdminLang, Record<string, string>> = {
     "blog.clickImage": "sau faceți clic pentru a selecta un fișier",
     "blog.publishArticle": "Publică articolul",
     "blog.saving": "Se salvează...",
+    "blog.desc": "Creați și editați articole pentru blog. Publicați știri și informații utile pentru pacienți.",
+    "blog.search": "Căutare după titlu sau slug",
+    "blog.total": "Total articole",
+    "blog.view": "Vizualizare",
+    "blog.edit": "Editează",
+    "blog.delete": "Șterge",
+    "blog.deleteError": "Eroare la ștergerea articolului",
+    "blog.publishError": "Eroare la modificarea statutului de publicare",
+    "blog.fieldTitle": "Titlu",
+    "blog.fieldExcerpt": "Descriere scurtă",
+    "blog.fieldContent": "Textul principal al articolului *",
+    "blog.fieldContentHint": "Introduceți textul articolului. Fiecare paragraf va fi formatat automat.",
+    "blog.fieldContentPlaceholder": "Introduceți textul articolului. Separați paragrafele cu o linie goală.",
+    "blog.urlLabel": "URL articolului",
 
     // Quick actions
     "actions.newAppointment": "Programare nouă",
