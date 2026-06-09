@@ -9,6 +9,18 @@ type AdminCalendarClientProps = {
   initialAppointments: Appointment[];
 };
 
+const DOCTORS: Record<string, string> = {
+  d1: "Ruslan Ceban",
+  d2: "Sorin Rabac",
+  d4: "Dumitru Gurenco",
+  d5: "Natalia Lozova",
+};
+
+function getDoctorName(doctorId: string | null | undefined, fallback: string): string {
+  if (!doctorId) return fallback;
+  return DOCTORS[doctorId] ?? doctorId;
+}
+
 const WEEK_DAYS = {
   ru: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
   ro: ["Lu", "Ma", "Mi", "Jo", "Vi", "Sâ", "Du"],
@@ -282,11 +294,21 @@ export default function AdminCalendarClient({
                             {t(`status.${appointment.status}`)}
                           </span>
                         </div>
-                        <div className="mt-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {formatTime(appointment.preferred_time, t("appointments.notSpecified"))}
+                        <div className="mt-2 flex flex-wrap items-center gap-4">
+                          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                            <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {formatTime(appointment.preferred_time, t("appointments.notSpecified"))}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                            <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span className="truncate max-w-[200px]">
+                              {getDoctorName(appointment.doctor_id, t("appointments.notSpecified"))}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
