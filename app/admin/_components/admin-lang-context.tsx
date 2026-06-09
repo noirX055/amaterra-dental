@@ -328,13 +328,13 @@ const translations: Record<AdminLang, Record<string, string>> = {
 };
 
 const AdminLangContext = createContext<AdminLangContextType>({
-  lang: "ru",
+  lang: "ro",
   setLang: () => {},
   t: (key) => key,
 });
 
 export function AdminLangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<AdminLang>("ru");
+  const [lang, setLangState] = useState<AdminLang>("ro");
 
   useEffect(() => {
     const saved = localStorage.getItem(ADMIN_LANG_KEY) as AdminLang | null;

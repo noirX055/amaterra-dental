@@ -33,22 +33,22 @@ export function AppointmentsChart({ appointments }: { appointments: Appointment[
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t("chart.title")}</h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t("chart.subtitle")}</p>
         </div>
-        <div className="flex gap-4 text-xs">
+      <div className="mb-4 flex flex-wrap gap-x-4 gap-y-2 text-xs">
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-amber-500" />
+            <div className="h-3 w-3 shrink-0 rounded-full bg-amber-500" />
             <span className="text-gray-600 dark:text-gray-400">{t("status.pending")}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-emerald-500" />
+            <div className="h-3 w-3 shrink-0 rounded-full bg-emerald-500" />
             <span className="text-gray-600 dark:text-gray-400">{t("status.confirmed")}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-blue-500" />
+            <div className="h-3 w-3 shrink-0 rounded-full bg-blue-500" />
             <span className="text-gray-600 dark:text-gray-400">{t("status.completed")}</span>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function AppointmentsChart({ appointments }: { appointments: Appointment[
                   {day.total}
                 </div>
               </div>
-              <div className="text-center text-xs text-gray-500">{day.label}</div>
+              <div className="w-full overflow-hidden text-center text-[10px] leading-tight text-gray-500" style={{wordBreak: "break-word"}}>{day.label}</div>
             </div>
           );
         })}
