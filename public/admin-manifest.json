@@ -31,6 +31,12 @@
       "purpose": "any maskable"
     },
     {
+      "src": "/icons/android-icon-192x192.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
       "src": "/icons/apple-icon-180x180.png",
       "sizes": "180x180",
       "type": "image/png"
