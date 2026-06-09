@@ -103,6 +103,30 @@ export async function PATCH(request: Request) {
   }
 
   const adminSupabase = createAdminClient();
+
+  // Validate double booking
+  if ((status === "pending" || status === "confirmed") && preferredDate && preferredTime && doctorId) {
+    const { data: conflicts } = await adminSupabase
+      .from("appointments")
+      .select("id, preferred_time")
+      .eq("preferred_date", preferredDate)
+      .eq("doctor_id", doctorId)
+      .in("status", ["pending", "confirmed"])
+      .neq("id", id);
+
+    if (conflicts && conflicts.length > 0) {
+      const isConflict = conflicts.some(
+        (c) => c.preferred_time?.slice(0, 5) === preferredTime.slice(0, 5)
+      );
+      if (isConflict) {
+        return NextResponse.json(
+          { error: "Это время уже занято у данного врача!" },
+          { status: 409 }
+        );
+      }
+    }
+  }
+
   const updatePayload: Record<string, unknown> = {
     status,
     admin_comment: adminComment,

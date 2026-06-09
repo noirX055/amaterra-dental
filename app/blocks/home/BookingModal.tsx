@@ -58,7 +58,9 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
   useEffect(() => {
     if (selectedDate && selectedDoctor) {
       setIsLoadingSlots(true);
-      fetch(`/api/appointments/busy-slots?date=${selectedDate}&doctorId=${selectedDoctor}`)
+      fetch(`/api/appointments/busy-slots?date=${selectedDate}&doctorId=${selectedDoctor}`, {
+        cache: "no-store",
+      })
         .then(res => res.json())
         .then(data => setBusySlots(data.busySlots || []))
         .catch(() => setBusySlots([]))
