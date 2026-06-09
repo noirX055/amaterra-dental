@@ -25,10 +25,20 @@ const statusTextByLang = {
   },
 } as const;
 
+const TIME_SLOTS = [
+  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", 
+  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", 
+  "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+];
+
 export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [busySlots, setBusySlots] = useState<string[]>([]);
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false);
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -36,11 +46,27 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      setSelectedDate("");
+      setSelectedDoctor("");
+      setBusySlots([]);
     }
     return () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (selectedDate && selectedDoctor) {
+      setIsLoadingSlots(true);
+      fetch(`/api/appointments/busy-slots?date=${selectedDate}&doctorId=${selectedDoctor}`)
+        .then(res => res.json())
+        .then(data => setBusySlots(data.busySlots || []))
+        .catch(() => setBusySlots([]))
+        .finally(() => setIsLoadingSlots(false));
+    } else {
+      setBusySlots([]);
+    }
+  }, [selectedDate, selectedDoctor]);
 
   useEffect(() => {
     if (!showSuccessPopup) return;
@@ -175,25 +201,46 @@ export function BookingModal({ t, lang, isOpen, onClose }: BookingModalProps) {
               <input
                 name="preferredDate"
                 type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
                 className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
                 required
               />
-              {/* Optional visually hidden label or fake placeholder logic could go here */}
             </div>
-            <input
-              name="preferredTime"
-              type="time"
-              className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
-            />
             <select
               name="doctor"
+              value={selectedDoctor}
+              onChange={(e) => setSelectedDoctor(e.target.value)}
               className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
+              required
             >
               <option value="">Выберите врача</option>
               <option value="d1">Ruslan Ceban - Медик-генералист</option>
               <option value="d2">Sorin Rabac - Терапевт-протезист</option>
               <option value="d4">Dumitru Gurenco - Терапевт-протезист</option>
               <option value="d5">Natalia Lozova - Ортодонт</option>
+            </select>
+            <select
+              name="preferredTime"
+              disabled={!selectedDate || !selectedDoctor || isLoadingSlots}
+              className="h-11 w-full rounded-[14px] border border-zinc-200 bg-zinc-50 px-4 text-sm text-zinc-900 outline-none transition-colors disabled:opacity-60 focus:border-zinc-400 focus:bg-white sm:h-13 sm:rounded-[18px] sm:px-5"
+              required
+            >
+              <option value="">
+                {!selectedDate || !selectedDoctor 
+                  ? "Сначала выберите дату и врача" 
+                  : isLoadingSlots 
+                    ? "Загрузка..." 
+                    : "Выберите время"}
+              </option>
+              {TIME_SLOTS.map(time => {
+                const isBusy = busySlots.includes(time);
+                return (
+                  <option key={time} value={time} disabled={isBusy}>
+                    {time} {isBusy ? "(Занято)" : ""}
+                  </option>
+                );
+              })}
             </select>
             <textarea
               name="notes"
